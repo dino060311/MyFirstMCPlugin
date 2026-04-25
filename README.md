@@ -35,3 +35,11 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 ---
 *Last Updated: 2026-04-25*
 
+### 3. 인게임 이벤트 리스너 구현 (Event Listener)
+- `AsyncPlayerChatEvent`를 활용하여 플레이어의 채팅을 감지하고 반응하는 시스템을 구현했습니다.
+- 특정 키워드("안녕") 입력 시 서버가 즉각적으로 시스템 메시지를 반환하도록 설정하여, 서버와 클라이언트 간의 상호작용 로직을 완성했습니다.
+
+> **[인게임 작동 검증 (In-game Verification)]**
+> <img width="1920" height="1080" alt="2026-04-25_21 55 13" src="https://github.com/user-attachments/assets/b5f417e4-1623-474d-bd8d-8bbd41c68fe9" />
+
+
