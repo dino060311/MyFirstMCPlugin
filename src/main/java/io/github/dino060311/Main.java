@@ -13,7 +13,7 @@ public class Main extends JavaPlugin {
         getLogger().info("------------------------------------");
 
         // 리스너 등록
-        getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
 
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
