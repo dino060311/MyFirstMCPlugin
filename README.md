@@ -57,4 +57,14 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 > **[다이아몬드 지급 검증]**
 > ![다이아몬드 채팅 결과](images/diamond_chat.png)
 
-_Last Updated: 2026-04-27_
+---
+
+### 5. 특수 능력 아이템 구현 (PlayerInteractEvent)
+- `PlayerInteractEvent`를 활용하여 플레이어의 아이템 상호작용(우클릭)을 실시간으로 감지하는 로직을 개발했습니다.
+- 특정 아이템(막대기)을 들고 상호작용 시, 플레이어의 시야에 닿는 타겟 블록(`getTargetBlockExact`)을 계산하여 해당 위치에 번개(`strikeLightning`)를 소환하는 동적인 월드 이벤트를 구현했습니다.
+- 이를 통해 단순한 텍스트 기반 상호작용을 넘어, 게임 내 물리적 환경 변화와 시각적/청각적 효과를 제어하는 방법을 숙달했습니다.
+
+> **[번개 지팡이 작동 검증]**
+> ![번개 지팡이 테스트](images/lightning_stick.png)
+
+_Last Updated: 2026-04-28_
