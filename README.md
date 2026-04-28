@@ -65,6 +65,6 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 - 이를 통해 단순한 텍스트 기반 상호작용을 넘어, 게임 내 물리적 환경 변화와 시각적/청각적 효과를 제어하는 방법을 숙달했습니다.
 
 > **[번개 지팡이 작동 검증]**
-> ![번개 지팡이 테스트](images/lightning_stick.png)
+> ![번개 지팡이 테스트](images/lighting_stick.png)
 
 _Last Updated: 2026-04-28_
