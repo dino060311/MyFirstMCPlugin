@@ -14,6 +14,7 @@ public class Main extends JavaPlugin {
 
         // 리스너 등록
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
+        getServer().getPluginManager().registerEvents(new JoinListener(), this);
 
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
