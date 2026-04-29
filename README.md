@@ -67,4 +67,14 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 > **[번개 지팡이 작동 검증]**
 > ![번개 지팡이 테스트](images/lighting_stick.png)
 
-_Last Updated: 2026-04-28_
+---
+
+### 6. 서버 입장 커스텀 타이틀 구현 (PlayerJoinEvent)
+- 새로운 이벤트 핸들러 클래스 `JoinListener`를 설계하여 관심사 분리(Separation of Concerns)를 실천했습니다.
+- 플레이어가 서버에 접속하는 순간(`PlayerJoinEvent`)을 감지하여 화면 중앙에 거대한 Welcome 타이틀과 서브타이틀(`sendTitle`)이 출력되도록 구현했습니다.
+- **Tick 단위 제어:** 타이틀이 나타나는 시간(Fade-in), 머무는 시간(Stay), 사라지는 시간(Fade-out)을 틱(Tick) 단위로 정교하게 조정하여 사용자 경험(UX)을 향상시켰습니다.
+
+> **[입장 환영 타이틀 검증]**
+> ![입장 타이틀 결과](images/welcome_title.png)
+
+_Last Updated: 2026-04-29_
