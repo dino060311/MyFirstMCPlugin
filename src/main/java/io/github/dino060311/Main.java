@@ -16,6 +16,10 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new BombListener(this), this);
+        
+        // 메뉴 명령어와 리스너 등록
+        getCommand("메뉴").setExecutor(new MenuCommand());
+        getServer().getPluginManager().registerEvents(new MenuListener(), this);
 
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
