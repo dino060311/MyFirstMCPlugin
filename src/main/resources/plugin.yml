@@ -7,3 +7,5 @@ description: Bukkit API를 활용한 첫 번째 마인크래프트 서버 플러
 commands:
   메뉴:
     description: 직업 선택 GUI 메뉴를 엽니다.
+  타이머:
+    description: 파밍 시간 보스바 타이머를 시작합니다.

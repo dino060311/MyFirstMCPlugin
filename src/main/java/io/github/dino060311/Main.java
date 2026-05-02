@@ -21,6 +21,9 @@ public class Main extends JavaPlugin {
         getCommand("메뉴").setExecutor(new MenuCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
 
+        // 보스바 타이머 명령어 등록
+        getCommand("타이머").setExecutor(new TimerCommand(this));
+
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
 
