@@ -23,7 +23,7 @@ public class TimerCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
-        // 60초 타이머 세팅
+        // 10초 타이머 세팅
         int timeLimit = 10;
 
         // 1. 화면 상단에 띄울 보스바 생성
@@ -49,8 +49,8 @@ public class TimerCommand implements CommandExecutor {
                     // 게이지 바 업데이트
                     bossBar.setProgress((double) timeLeft / timeLimit); 
 
-                    // 10초 이하로 남으면 긴장감을 위해 색상을 빨간색으로 변경!
-                    if (timeLeft <= 10) {
+                    // 5초 이하로 남으면 긴장감을 위해 색상을 빨간색으로 변경!
+                    if (timeLeft <= 5) {
                         bossBar.setColor(BarColor.RED);
                         bossBar.setTitle("§c[파밍 시간] §f남은 시간: " + timeLeft + "초");
                     }
