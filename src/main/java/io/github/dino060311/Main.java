@@ -24,6 +24,10 @@ public class Main extends JavaPlugin {
         // 보스바 타이머 명령어 등록
         getCommand("타이머").setExecutor(new TimerCommand(this));
 
+        // NPC 명령어와 상호작용 리스너 등록
+        getCommand("npc소환").setExecutor(new NpcCommand());
+        getServer().getPluginManager().registerEvents(new NpcListener(), this);
+
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
 
