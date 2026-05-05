@@ -28,6 +28,10 @@ public class Main extends JavaPlugin {
         getCommand("npc소환").setExecutor(new NpcCommand());
         getServer().getPluginManager().registerEvents(new NpcListener(), this);
 
+        // 마법 지팡이 기능 등록
+        getCommand("마법지팡이").setExecutor(new WandCommand());
+        getServer().getPluginManager().registerEvents(new MagicWandListener(), this);
+
         getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
     }
 

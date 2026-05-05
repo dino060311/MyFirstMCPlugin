@@ -11,3 +11,5 @@ commands:
     description: 파밍 시간 보스바 타이머를 시작합니다.
   npc소환:
     description: 제자리에 고정된 스토리 NPC를 소환합니다.
+  마법지팡이:
+    description: 화염 마법 지팡이를 꺼냅니다.
