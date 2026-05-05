@@ -133,4 +133,15 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 > **[스토리 NPC 퀘스트 작동 검증]**
 > ![NPC 퀘스트 진행](images/npc_quest.gif)
 
-_Last Updated: 2026-05-04_
+---
+
+### 11. HashMap 쿨타임 시스템 및 히트스캔(Hitscan) 마법 무기 구현
+- 자바의 핵심 자료구조인 `HashMap<UUID, Long>`을 활용하여 플레이어별 아이템 사용 대기시간(쿨타임)을 독립적으로 계산하고 제어합니다.
+- **UI/UX 최적화:** 잦은 채팅 메시지 대신, Spigot API의 `setCooldown`을 활용해 인벤토리 아이템 자체에 직관적인 회색 쿨타임 오버레이 모션을 적용했습니다.
+- **히트스캔 충돌 판정:** `Vector`와 `Location`을 이용해 파티클을 일직선으로 발사하며, `getNearbyEntities`를 통해 파티클 반경 내의 생명체(`LivingEntity`)를 실시간으로 탐지합니다.
+- 적중 시 타격음과 함께 5.0의 데미지를 가하고 `setFireTicks`로 3초간 화상 상태를 부여하는 복합적인 RPG 무기 로직을 완성했습니다.
+
+> **[마법 지팡이 히트스캔 타격 및 쿨타임 검증]**
+> ![히트스캔 지팡이](images/wand_hitscan.gif)
+
+_Last Updated: 2026-05-05_
