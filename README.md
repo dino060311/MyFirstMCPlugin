@@ -153,6 +153,6 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 - `BukkitRunnable` 스케줄러를 사용하여 정확히 3초(60 ticks) 뒤에 화면 고정이 해제되도록 비동기 타이머 로직을 안전하게 처리했습니다.
 
 > **[컷신 및 화면 고정 연출 검증]**
-> ![컷신 연출](images/cutscene.mp4)
+> ![컷신 연출]([images/cutscene.mp4](https://github.com/user-attachments/assets/c26e066c-36c8-417d-a664-25a185ebf342))
 
 _Last Updated: 2026-05-08_
