@@ -10,8 +10,9 @@ public class Main extends JavaPlugin {
         getLogger().info("------------------------------------");
         getLogger().info("MyFirstMCPlugin 활성화 완료!");
         getLogger().info("첫 번째 마인크래프트 플러그인 제작에 성공했습니다.");
+        getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
         getLogger().info("------------------------------------");
-
+        
         // 리스너 등록
         getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
@@ -32,7 +33,10 @@ public class Main extends JavaPlugin {
         getCommand("마법지팡이").setExecutor(new WandCommand());
         getServer().getPluginManager().registerEvents(new MagicWandListener(), this);
 
-        getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
+        // 컷신 연출 기능 등록
+        getCommand("컷신").setExecutor(new CutsceneCommand(this));
+        getServer().getPluginManager().registerEvents(new CutsceneListener(), this);
+
     }
 
     @Override

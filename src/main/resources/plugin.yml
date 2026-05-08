@@ -13,3 +13,5 @@ commands:
     description: 제자리에 고정된 스토리 NPC를 소환합니다.
   마법지팡이:
     description: 화염 마법 지팡이를 꺼냅니다.
+  컷신:
+    description: 극적인 화면 고정 연출을 테스트합니다.
