@@ -34,7 +34,7 @@ public class JobMenuCommand implements CommandExecutor {
         results.put(players.get(2).getUniqueId(), "의사");
         for (int i = 3; i < players.size(); i++) {
             results.put(players.get(i).getUniqueId(), "시민");
-        }
+        } 
 
         // 2. 모든 플레이어에게 룰렛 시작
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -44,7 +44,7 @@ public class JobMenuCommand implements CommandExecutor {
     }
 
     private void startRoulette(Player player, String finalJob) {
-        Inventory inv = Bukkit.createInventory(null, 9, "§0??? 랜덤 직업 돌리는 중 ???");
+        Inventory inv = Bukkit.createInventory(null, 9, "§0직업 결정 중...");
         player.openInventory(inv);
 
         Material[] displayItems = {Material.CROSSBOW, Material.BREAD, Material.DIAMOND_SWORD, Material.TOTEM_OF_UNDYING};
@@ -89,14 +89,14 @@ public class JobMenuCommand implements CommandExecutor {
         } else { // 시민
             player.getInventory().addItem(new ItemStack(Material.BREAD, 10)); // 식량 10개
         }
-
-        // 3. 2초 뒤 메시지와 함께 창 닫기
+        
+        // 메시지와 함께 창 닫기
         new BukkitRunnable() {
             @Override
             public void run() {
                 player.closeInventory();
                 player.sendMessage("§a[System] 게임이 곧 시작됩니다. 준비하세요!");
             }
-        }.runTaskLater(plugin, 40); // 40틱 = 2초
+        }.runTaskLater(plugin, 30);
     }
 }
