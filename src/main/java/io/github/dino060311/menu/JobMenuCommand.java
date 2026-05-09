@@ -59,7 +59,7 @@ public class JobMenuCommand implements CommandExecutor {
                     return;
                 }
                 
-                // 아이템 셔플 애니메이션 (4번 슬롯에 계속 바뀜)
+                // 아이템 셔플 애니메이션
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 2.0f);
                 inv.setItem(4, new ItemStack(displayItems[count % 4]));
                 count++;
@@ -90,7 +90,7 @@ public class JobMenuCommand implements CommandExecutor {
             player.getInventory().addItem(new ItemStack(Material.BREAD, 10)); // 식량 10개
         }
 
-        // 3. 2초 뒤에 축하 메시지와 함께 창 닫기
+        // 3. 2초 뒤 메시지와 함께 창 닫기
         new BukkitRunnable() {
             @Override
             public void run() {
