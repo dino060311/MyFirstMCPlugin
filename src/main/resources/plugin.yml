@@ -15,3 +15,5 @@ commands:
     description: 화염 마법 지팡이를 꺼냅니다.
   컷신:
     description: 극적인 화면 고정 연출을 테스트합니다.
+  랜덤직업:
+    description: 직업을 선택하는 메뉴 창을 엽니다.

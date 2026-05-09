@@ -1,4 +1,4 @@
-package io.github.dino060311; // pom.xml에서 설정한 groupId와 맞춰야 해요
+package io.github.dino060311;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,6 +43,10 @@ public class Main extends JavaPlugin {
         getCommand("컷신").setExecutor(new CutsceneCommand(this));
         getServer().getPluginManager().registerEvents(new CutsceneListener(), this);
 
+        //직업 선택 GUI 기능 등록
+        getCommand("랜덤직업").setExecutor(new JobMenuCommand(this));
+        getServer().getPluginManager().registerEvents(new JobMenuListener(), this);
+        
     }
 
     @Override
