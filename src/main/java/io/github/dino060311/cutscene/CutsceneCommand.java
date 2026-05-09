@@ -1,4 +1,4 @@
-package io.github.dino060311;
+package io.github.dino060311.cutscene;
 
 import org.bukkit.Sound;
 import org.bukkit.command.Command;

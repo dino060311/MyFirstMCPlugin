@@ -2,6 +2,12 @@ package io.github.dino060311; // pom.xml에서 설정한 groupId와 맞춰야 �
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.github.dino060311.menu.*;
+import io.github.dino060311.npc.*;
+import io.github.dino060311.cutscene.*;
+import io.github.dino060311.items.*;
+import io.github.dino060311.system.*;
+
 public class Main extends JavaPlugin {
 
     @Override

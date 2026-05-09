@@ -1,4 +1,4 @@
-package io.github.dino060311;
+package io.github.dino060311.menu;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;

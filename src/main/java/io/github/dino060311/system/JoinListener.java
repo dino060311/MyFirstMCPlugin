@@ -1,4 +1,4 @@
-package io.github.dino060311;
+package io.github.dino060311.system;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
