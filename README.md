@@ -165,7 +165,7 @@ https://github.com/user-attachments/assets/ce85301a-fe03-4912-8a56-e9db0e8c9a99
 - **직업별 장비 자동화:** 추첨 완료 시 각 직업의 상징 아이템(마피아: 쇠뇌/화살, 경찰: 철검, 의사: 불사의 토템, 시민: 빵)이 자동으로 인벤토리에 지급되도록 설계하여 상황극 준비 시간을 획기적으로 단축했습니다.
 - **보안 로직 적용:** 추첨이 진행되는 동안 플레이어가 룰렛 아이템을 마우스로 클릭하여 탈취하거나 취소할 수 없도록 `InventoryClickEvent`를 완벽히 차단(`setCancelled`)했습니다.
 
-> **[직업 추첨 룰렛 작동 검증]**
-> ![직업 추첨 테스트](images/job_roulette.gif)
+> **[랜덤직업 작동 검증]**
+> ![랜덤직업](images/job_roulette.gif)
 
 _Last Updated: 2026-05-09_
