@@ -17,3 +17,5 @@ commands:
     description: 극적인 화면 고정 연출을 테스트합니다.
   랜덤직업:
     description: 직업을 선택하는 메뉴 창을 엽니다.
+  무기대장장이:
+    description: 거래가 가능한 무기 대장장이 NPC를 소환합니다.

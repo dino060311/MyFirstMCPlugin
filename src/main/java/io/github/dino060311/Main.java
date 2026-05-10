@@ -46,7 +46,10 @@ public class Main extends JavaPlugin {
         //직업 선택 GUI 기능 등록
         getCommand("랜덤직업").setExecutor(new JobMenuCommand(this));
         getServer().getPluginManager().registerEvents(new JobMenuListener(), this);
-        
+
+        getCommand("무기대장장이").setExecutor(new MerchantNpcCommand());
+        getServer().getPluginManager().registerEvents(new MerchantNpcListener(), this);
+
     }
 
     @Override
