@@ -179,4 +179,4 @@ https://github.com/user-attachments/assets/ce85301a-fe03-4912-8a56-e9db0e8c9a99
 > **[무기 대장장이 상점 작동 검증]**
 > ![무기 대장장이 상점](images/weapon_smith.gif)
 
-_Last Updated: 2026-05-010_
+_Last Updated: 2026-05-10_
