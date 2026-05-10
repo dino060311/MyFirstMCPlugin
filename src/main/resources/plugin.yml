@@ -21,3 +21,5 @@ commands:
     description: 직업을 선택하는 메뉴 창을 엽니다.
   무기대장장이:
     description: 거래가 가능한 무기 대장장이 NPC를 소환합니다.
+  서버명령어:
+    description: 서버의 특수 능력을 안내합니다.

@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.dino060311.menu.*;
 import io.github.dino060311.npc.*;
+import io.github.dino060311.command.HelpCommand;
 import io.github.dino060311.cutscene.*;
 import io.github.dino060311.items.*;
 import io.github.dino060311.system.*;
@@ -52,6 +53,8 @@ public class Main extends JavaPlugin {
 
         getCommand("무기대장장이").setExecutor(new MerchantNpcCommand());
         getServer().getPluginManager().registerEvents(new MerchantNpcListener(), this);
+
+        getCommand("서버명령어").setExecutor(new HelpCommand());
 
     }
 

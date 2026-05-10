@@ -17,5 +17,6 @@ public class JoinListener implements Listener {
         
         // 환영 메시지도 보냅니다.
         player.sendMessage("§7[System] 서버의 특수 능력을 테스트해보세요!");
+        player.sendMessage("§e[Tip] §f도움말이 필요하면 §a/서버명령어 §f를 입력하세요.");
     }
 }
