@@ -168,4 +168,15 @@ https://github.com/user-attachments/assets/ce85301a-fe03-4912-8a56-e9db0e8c9a99
 > **[랜덤직업 작동 검증]**
 > ![랜덤직업](images/job_roulette.gif)
 
-_Last Updated: 2026-05-09_
+---
+
+### 14. Merchant API 기반 커스텀 NPC 상점 구현 (무기 대장장이)
+- 마인크래프트 기본 주민 거래 시스템을 상황극 경제 시스템에 맞춰 완전히 통제할 수 있는 **커스텀 상점(Merchant GUI)**을 구현했습니다.
+- **커스텀 레시피 적용:** `MerchantRecipe` 클래스를 활용해 에메랄드(화폐)와 다이아몬드 장비/활(상품)의 교환 비율을 직접 세팅했습니다. 복잡한 인벤토리 클릭 이벤트를 일일이 막는 대신, 바닐라 친화적인 거래 UI를 제공하여 플레이어의 UX를 향상시켰습니다.
+- **엔티티 외형 및 상태 완벽 제어:** `Villager.Profession.WEAPONSMITH` 속성을 부여해 시각적인 컨셉을 맞추고, `setAI(false)`와 `setInvulnerable(true)`를 적용하여 상황극 도중 NPC가 이탈하거나 죽지 않도록 통제력을 확보했습니다.
+- **운영 편의성 커맨드:** 원하는 위치에 즉시 대장장이 NPC를 배치할 수 있는 `/무기대장장이` 커맨드를 구현하여 맵 세팅 및 서버 운영의 효율성을 극대화했습니다.
+
+> **[무기 대장장이 상점 작동 검증]**
+> ![무기 대장장이 상점](images/weapon_smith.gif)
+
+_Last Updated: 2026-05-010_
