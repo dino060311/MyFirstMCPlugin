@@ -35,6 +35,9 @@ public class Main extends JavaPlugin {
         getCommand("npc소환").setExecutor(new NpcCommand());
         getServer().getPluginManager().registerEvents(new NpcListener(), this);
 
+        //투척형 시한폭탄 등록
+        getCommand("시한폭탄").setExecutor(new BombCommand());
+
         // 마법 지팡이 기능 등록
         getCommand("마법지팡이").setExecutor(new WandCommand());
         getServer().getPluginManager().registerEvents(new MagicWandListener(), this);

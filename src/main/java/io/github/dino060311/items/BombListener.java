@@ -22,9 +22,11 @@ public class BombListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
 
-        // 1. 플레이어가 들고 있는 아이템이 TNT인지 확인
-        if (player.getInventory().getItemInMainHand().getType() == Material.TNT) {
+        // 1. TNT인지 확인 + 이름이 "§c§l시한폭탄"인지 확인
+        if (item.getType() == Material.TNT && item.hasItemMeta() && 
+            "§c§l시한폭탄".equals(item.getItemMeta().getDisplayName())) {
             
             // 2. 우클릭을 했는지 확인
             if (event.getAction().name().contains("RIGHT_CLICK")) {
@@ -33,14 +35,16 @@ public class BombListener implements Listener {
                 event.setCancelled(true);
 
                 // TNT 1개 소모
-                int amount = player.getInventory().getItemInMainHand().getAmount();
-                player.getInventory().getItemInMainHand().setAmount(amount - 1);
+                item.setAmount(item.getAmount() - 1);
 
-                // 3. 플레이어 눈 위치에 TNT 아이템을 생성하여 던짐
+                // 플레이어 눈 위치에 TNT 아이템을 생성하여 던짐
                 Item thrownBomb = player.getWorld().dropItem(player.getEyeLocation(), new ItemStack(Material.TNT));
                 
                 // 플레이어가 바라보는 방향으로 날려보냄
                 thrownBomb.setVelocity(player.getLocation().getDirection().multiply(1.5));
+
+                // 던진 폭탄을 다시 주울 수 없게 설정
+                thrownBomb.setPickupDelay(99999);
 
                 // 4. 타이머 시작 (3초 뒤 터짐)
                 new BukkitRunnable() {
