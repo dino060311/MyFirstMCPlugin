@@ -92,7 +92,7 @@ PaperMC 서버의 `plugins` 폴더에 배포 후, 서버 콘솔에서 `/pl` 명�
 > **[투척형 시한폭탄 작동 검증]**
 > ![시한폭탄 테스트](images/throwing_bomb.gif)
 
---
+---
 
 ### 8. 커스텀 GUI 기반 직업 선택 시스템 (InventoryClickEvent)
 
@@ -181,4 +181,13 @@ https://github.com/user-attachments/assets/ce85301a-fe03-4912-8a56-e9db0e8c9a99
 > **[무기 대장장이 상점 작동 검증]**
 > ![무기 대장장이 상점](images/weapon_smith.gif)
 
-_Last Updated: 2026-05-10_
+---
+
+### 15. 사용자 경험(UX) 개선 및 서버 가이드 시스템
+- **접속 이벤트 최적화:** `PlayerJoinEvent`를 활용하여 신규/기존 플레이어 접속 시 `sendTitle`을 통한 환영 연출과 채팅 가이드를 자동 출력하여 서버의 첫인상을 강화했습니다.
+- **통합 도움말 시스템:** `/서버명령어` 커맨드를 구현하여 플레이어가 서버 내 커스텀 기능(컷신, 상점 등)을 한눈에 파악하고 즉시 사용할 수 있도록 유도했습니다.
+
+> **[서버명령어 작동 검증]**
+> ![서버명령어](images/server_guide_system.png)
+
+_Last Updated: 2026-05-11_
