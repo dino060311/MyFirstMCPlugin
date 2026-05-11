@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class MenuListener implements Listener {
+public class JobSelectListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

@@ -28,7 +28,7 @@ public class InitManager {
             RouletteService rouletteService) {
 
         // 명령어 등록
-        plugin.getCommand("메뉴").setExecutor(new MenuCommand());
+        plugin.getCommand("직업선택").setExecutor(new JobSelectCommand());
         plugin.getCommand("타이머").setExecutor(new TimerCommand(plugin));
         plugin.getCommand("npc소환").setExecutor(new NpcCommand());
         plugin.getCommand("시한폭탄").setExecutor(new BombCommand());
@@ -55,7 +55,7 @@ public class InitManager {
         pm.registerEvents(new MerchantNpcListener(), plugin);
         
         // 직업 시스템 관련
-        pm.registerEvents(new MenuListener(), plugin);
+        pm.registerEvents(new JobSelectListener(), plugin);
         pm.registerEvents(new JobMenuListener(), plugin);
     }
 }
