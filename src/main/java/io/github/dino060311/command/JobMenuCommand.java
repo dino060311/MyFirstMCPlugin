@@ -1,4 +1,4 @@
-package io.github.dino060311.menu;
+package io.github.dino060311.command;
 
 import io.github.dino060311.manager.RoleManager;
 import io.github.dino060311.service.JobService;

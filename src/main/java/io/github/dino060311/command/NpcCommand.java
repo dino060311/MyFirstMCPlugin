@@ -1,4 +1,4 @@
-package io.github.dino060311.npc;
+package io.github.dino060311.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,4 +1,4 @@
-package io.github.dino060311.cutscene;
+package io.github.dino060311.listener;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;

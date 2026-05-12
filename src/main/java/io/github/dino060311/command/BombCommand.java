@@ -1,4 +1,4 @@
-package io.github.dino060311.items;
+package io.github.dino060311.command;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;

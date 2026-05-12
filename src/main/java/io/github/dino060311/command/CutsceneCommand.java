@@ -1,5 +1,6 @@
-package io.github.dino060311.cutscene;
+package io.github.dino060311.command;
 
+import io.github.dino060311.listener.CutsceneListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;

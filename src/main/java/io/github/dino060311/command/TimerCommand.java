@@ -1,4 +1,4 @@
-package io.github.dino060311.system;
+package io.github.dino060311.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;

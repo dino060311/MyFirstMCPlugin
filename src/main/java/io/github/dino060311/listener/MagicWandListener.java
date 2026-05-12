@@ -1,4 +1,4 @@
-package io.github.dino060311.items;
+package io.github.dino060311.listener;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

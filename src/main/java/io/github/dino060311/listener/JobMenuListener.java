@@ -1,4 +1,4 @@
-package io.github.dino060311.menu;
+package io.github.dino060311.listener;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

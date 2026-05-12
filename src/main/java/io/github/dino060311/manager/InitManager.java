@@ -4,13 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import io.github.dino060311.Main;
-import io.github.dino060311.command.HelpCommand;
-import io.github.dino060311.cutscene.*;
-import io.github.dino060311.items.*;
-import io.github.dino060311.menu.*;
-import io.github.dino060311.npc.*;
+import io.github.dino060311.command.*;
+import io.github.dino060311.listener.*;
 import io.github.dino060311.service.*;
-import io.github.dino060311.system.*;
 
 public class InitManager {
 
@@ -53,7 +49,7 @@ public class InitManager {
         pm.registerEvents(new MagicWandListener(), plugin);
         pm.registerEvents(new CutsceneListener(), plugin);
         pm.registerEvents(new MerchantNpcListener(), plugin);
-        
+
         // 직업 시스템 관련
         pm.registerEvents(new JobSelectListener(), plugin);
         pm.registerEvents(new JobMenuListener(), plugin);

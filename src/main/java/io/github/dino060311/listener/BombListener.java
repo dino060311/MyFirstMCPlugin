@@ -1,4 +1,4 @@
-package io.github.dino060311.items;
+package io.github.dino060311.listener;
 
 import io.github.dino060311.service.BombService;
 import org.bukkit.Material;

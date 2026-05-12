@@ -1,4 +1,4 @@
-package io.github.dino060311.npc;
+package io.github.dino060311.listener;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;

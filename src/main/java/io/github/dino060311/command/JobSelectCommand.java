@@ -1,4 +1,4 @@
-package io.github.dino060311.menu;
+package io.github.dino060311.command;
 
 import java.util.Arrays;
 import org.bukkit.Bukkit;
