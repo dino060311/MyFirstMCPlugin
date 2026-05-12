@@ -1,0 +1,215 @@
+options:
+    p: §f[§bRPS§f]
+
+# --- 명령어 부분 ---
+command /가위바위보 [<player>]:
+    trigger:
+        if arg 1 is set:
+            set {rps.challenger::%arg 1%} to player
+            send "{@p} §e%arg 1%§f님에게 대결을 신청했습니다!" to player
+            send "{@p} §e%player%§f님이 대결을 신청했습니다! §a/수락 §f을 입력하세요." to arg 1
+        else:
+            send "{@p} 대결할 상대를 입력하세요."
+
+command /수락:
+    trigger:
+        if {rps.challenger::%player%} is set:
+            set {_p1} to {rps.challenger::%player%}
+            set {_p2} to player
+            delete {rps.challenger::%player%}
+            
+            # 대결 시작 시 두 플레이어를 완벽한 풀피 상태로 만듦
+            heal {_p1}
+            heal {_p2}
+            
+            # 게임 시작 세팅
+            set {rps.active::%{_p1}%} to {_p2}
+            set {rps.active::%{_p2}%} to {_p1}
+            make {_p1} execute command "/rps_start_round"
+        else:
+            send "{@p} 받은 신청이 없습니다."
+
+# --- 내부 라운드 시작 명령어 (화면 GUI 띄우기) ---
+command /rps_start_round:
+    executable by: players, console
+    trigger:
+        set {_p1} to player
+        set {_p2} to {rps.active::%player%}
+
+        # 1. 위치 고정 (시선 각도 Pitch를 0으로 고정하여 땅 파묻힘 방지)
+        set {_loc} to {_p1}'s location
+        set pitch of {_loc} to 0
+        
+        set {_p1_loc} to {_loc}
+        set {_p2_loc} to location 2 meters in front of {_loc}
+        set yaw of {_p2_loc} to (yaw of {_loc} + 180)
+        set pitch of {_p2_loc} to 0
+        
+        teleport {_p1} to {_p1_loc}
+        teleport {_p2} to {_p2_loc}
+        
+        delete {rps.choice::%{_p1}%}
+        delete {rps.choice::%{_p2}%}
+        
+        # 2. 화면에 가위바위보 선택 창(GUI) 띄우기
+        open chest inventory with 3 rows named "§0가위 바위 보 선택" to {_p1}
+        set slot 11 of {_p1}'s current inventory to shears named "§c§l가위" with lore "§f클릭하여 가위를 냅니다."
+        set slot 13 of {_p1}'s current inventory to stone named "§a§l바위" with lore "§f클릭하여 바위를 냅니다."
+        set slot 15 of {_p1}'s current inventory to paper named "§b§l보" with lore "§f클릭하여 보를 냅니다."
+
+        open chest inventory with 3 rows named "§0가위 바위 보 선택" to {_p2}
+        set slot 11 of {_p2}'s current inventory to shears named "§c§l가위" with lore "§f클릭하여 가위를 냅니다."
+        set slot 13 of {_p2}'s current inventory to stone named "§a§l바위" with lore "§f클릭하여 바위를 냅니다."
+        set slot 15 of {_p2}'s current inventory to paper named "§b§l보" with lore "§f클릭하여 보를 냅니다."
+        
+        send title "§6진검승부!" with subtitle "3초 안에 화면에서 선택하세요!" to {_p1} and {_p2}
+        play sound "block.note_block.bell" to {_p1} and {_p2}
+        
+        # 3. 3초 대기
+        wait 3 seconds
+        
+        # 4. 시간 종료 후 창 닫고 결과 확인
+        close {_p1}'s inventory
+        close {_p2}'s inventory
+        make {_p1} execute command "/rps_check_result"
+
+# --- GUI 클릭 제어 (마우스로 선택) ---
+on inventory click:
+    if name of event-inventory is "§0가위 바위 보 선택":
+        cancel event # 아이템 빼가기 방지
+        
+        if clicked slot is 11:
+            set {rps.choice::%player%} to "가위"
+            send title "§c가위" with subtitle "결과를 기다리는 중..." to player
+            close player's inventory
+        else if clicked slot is 13:
+            set {rps.choice::%player%} to "바위"
+            send title "§a바위" with subtitle "결과를 기다리는 중..." to player
+            close player's inventory
+        else if clicked slot is 15:
+            set {rps.choice::%player%} to "보"
+            send title "§b보" with subtitle "결과를 기다리는 중..." to player
+            close player's inventory
+
+# --- 판정 및 역할 부여 ---
+command /rps_check_result:
+    trigger:
+        set {_p1} to player
+        set {_p2} to {rps.active::%player%}
+        
+        set {_c1} to {rps.choice::%{_p1}%}
+        set {_c2} to {rps.choice::%{_p2}%}
+        
+        if {_c1} is not set:
+            set {_c1} to "미선택"
+        if {_c2} is not set:
+            set {_c2} to "미선택"
+            
+        if {_c1} is {_c2}:
+            send "{@p} 무승부입니다! 다시 시작합니다." to {_p1} and {_p2}
+            make {_p1} execute command "/rps_start_round"
+            stop
+            
+        set {_win} to false
+        if {_c1} is "가위":
+            if {_c2} is "보" or "미선택":
+                set {_win} to true
+        else if {_c1} is "바위":
+            if {_c2} is "가위" or "미선택":
+                set {_win} to true
+        else if {_c1} is "보":
+            if {_c2} is "바위" or "미선택":
+                set {_win} to true
+        else if {_c1} is "미선택":
+            set {_win} to false
+                
+        if {_win} is true:
+            assign_roles({_p1}, {_p2})
+        else:
+            assign_roles({_p2}, {_p1})
+
+function assign_roles(win: player, loss: player):
+    send title "§c공격!" with subtitle "상대방을 처치하세요!" to {_win}
+    send title "§b방어!" with subtitle "방패로 공격을 막으세요!" to {_loss}
+    
+    give 1 diamond sword named "§c§l승리자의 검" to {_win}
+    give 1 shield named "§b§l패배자의 방패" to {_loss}
+    
+    set {rps.role::%{_win}%} to "winner"
+    set {rps.role::%{_loss}%} to "loser"
+
+# --- 전투 리스너 (무기 제한 및 1회용 소멸) ---
+on damage:
+    if {rps.role::%attacker%} is "winner":
+        if {rps.role::%victim%} is "loser":
+            
+            # 이중 자물쇠: 들고 있는 아이템이 '다이아몬드 검'이고, 이름이 '승리자의 검'인지 검사
+            if attacker's tool is a diamond sword:
+                if name of attacker's tool is "§c§l승리자의 검":
+                    
+                    # [상황 A] 방패로 막았을 때
+                    if victim is blocking:
+                        cancel event
+                        send "§b방패로 완벽하게 막았습니다! 무기가 부서집니다." to victim and attacker
+                        play sound "item.shield.block" to victim and attacker
+                        play sound "entity.item.break" to victim and attacker
+                        
+                        remove diamond sword from attacker's inventory
+                        remove shield from victim's inventory
+                        
+                        send "{@p} 3초 뒤 가위바위보를 다시 시작합니다!" to victim and attacker
+                        wait 3 seconds
+                        make attacker execute command "/rps_start_round"
+                        
+                    # [상황 B] 방패로 못 막고 맞았을 때
+                    else:
+                        set damage to 2 # 피 2칸 깎임
+                        send "§c공격에 적중했습니다! 무기가 부서집니다." to victim and attacker
+                        play sound "entity.item.break" to attacker
+                        
+                        remove diamond sword from attacker's inventory
+                        remove shield from victim's inventory
+                        
+                        wait 1 tick
+                        if health of victim > 0: 
+                            send "{@p} 3초 뒤 가위바위보를 다시 시작합니다!" to victim and attacker
+                            wait 3 seconds
+                            make attacker execute command "/rps_start_round"
+                            
+                else:
+                    cancel event
+                    send "{@p} §c반드시 '승리자의 검'을 들고 공격해야 합니다!" to attacker
+            else:
+                cancel event
+                send "{@p} §c맨손이나 다른 아이템으로는 데미지를 줄 수 없습니다!" to attacker
+                
+    # 방어자가 때리는 것 방지
+    else if {rps.role::%attacker%} is "loser":
+        cancel event
+        send "{@p} 당신은 방어 차례입니다! 막는 데 집중하세요." to attacker
+
+# --- 체력 자동 회복 완벽 차단 리스너 ---
+on heal:
+    if {rps.active::%player%} is set:
+        cancel event
+
+# --- 사망 시 게임 완전 종료 리스너 ---
+on death of player:
+    if {rps.active::%victim%} is set:
+        set {_winner} to {rps.active::%victim%}
+        broadcast "{@p} §e%{_winner}%§f님이 가위바위보 데스매치에서 최종 승리했습니다!"
+        
+        # 무기 압수
+        remove diamond sword from {_winner}'s inventory
+        remove shield from victim's inventory
+        
+        # 게임 변수 완벽 초기화 (무한 루프 종료)
+        delete {rps.role::%victim%}
+        delete {rps.role::%{_winner}%}
+        delete {rps.active::%victim%}
+        delete {rps.active::%{_winner}%}
+        delete {rps.choice::%victim%}
+        delete {rps.choice::%{_winner}%}
+        
+        # 화면에 승리/패배 띄우기
+        send title "§6게임 종료!" with subtitle "§e%{_winner}%§f님의 승리!" to {_winner} and victim
