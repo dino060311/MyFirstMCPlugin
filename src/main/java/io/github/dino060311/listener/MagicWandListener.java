@@ -58,7 +58,7 @@ public class MagicWandListener implements Listener {
                         loc.add(dir); 
                         player.getWorld().spawnParticle(Particle.FLAME, loc, 3, 0.1, 0.1, 0.1, 0.01); 
                         if (i % 3 == 0) { 
-                            player.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 1, 0, 0, 0, 0);
+                            player.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 1, 0, 0, 0, 0);
                         }
 
                         // 현재 파티클 위치 반경 0.5칸 안에 엔티티(몹/사람)가 있는지 검사!
