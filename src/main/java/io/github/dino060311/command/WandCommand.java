@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 public class WandCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -17,7 +20,7 @@ public class WandCommand implements CommandExecutor {
             // 블레이즈 막대기(BLAZE_ROD)를 마법 지팡이로 만듭니다.
             ItemStack wand = new ItemStack(Material.BLAZE_ROD);
             ItemMeta meta = wand.getItemMeta();
-            meta.setDisplayName("§6[ 화염 마법 지팡이 ]");
+            meta.displayName(Component.text("§6[ 화염 마법 지팡이 ]").color(NamedTextColor.GOLD));
             wand.setItemMeta(meta);
             
             player.getInventory().addItem(wand);
