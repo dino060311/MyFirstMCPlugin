@@ -15,9 +15,10 @@ public class InitManager {
         RoleManager roleManager = new RoleManager();
         JobService jobService = new JobService(roleManager);
         RouletteService rouletteService = new RouletteService(plugin);
+        BossSkillService bossSkillService = new BossSkillService();
 
         registerCommands(plugin, roleManager, jobService, rouletteService);
-        registerEvents(plugin, roleManager, jobService, rouletteService);
+        registerEvents(plugin, roleManager, jobService, rouletteService, bossSkillService);
     }
 
     private static void registerCommands(Main plugin, RoleManager roleManager, JobService jobService,
@@ -33,10 +34,11 @@ public class InitManager {
         plugin.getCommand("랜덤직업").setExecutor(new JobMenuCommand(roleManager, jobService, rouletteService));
         plugin.getCommand("무기대장장이").setExecutor(new MerchantNpcCommand());
         plugin.getCommand("서버명령어").setExecutor(new HelpCommand());
+        plugin.getCommand("보스좀비소환").setExecutor(new BossSpawnCommand());
     }
 
     private static void registerEvents(Main plugin, RoleManager roleManager, JobService jobService,
-            RouletteService rouletteService) {
+            RouletteService rouletteService, BossSkillService bossSkillService) {
         PluginManager pm = Bukkit.getPluginManager();
 
         // 시스템 관련
@@ -49,6 +51,7 @@ public class InitManager {
         pm.registerEvents(new MagicWandListener(), plugin);
         pm.registerEvents(new CutsceneListener(), plugin);
         pm.registerEvents(new MerchantNpcListener(), plugin);
+        pm.registerEvents(new BossListener(bossSkillService), plugin);
 
         // 직업 시스템 관련
         pm.registerEvents(new JobSelectListener(), plugin);

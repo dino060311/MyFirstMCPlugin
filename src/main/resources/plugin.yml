@@ -23,3 +23,5 @@ commands:
     description: 거래가 가능한 무기 대장장이 NPC를 소환합니다.
   서버명령어:
     description: 서버의 특수 능력을 안내합니다.
+  보스좀비소환:
+    description: 보스 좀비를 소환합니다.
