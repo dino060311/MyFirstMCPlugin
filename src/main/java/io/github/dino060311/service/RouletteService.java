@@ -2,26 +2,35 @@ package io.github.dino060311.service;
 
 import io.github.dino060311.Main;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+
 public class RouletteService {
     private final Main plugin;
+
     public RouletteService(Main plugin) {
         this.plugin = plugin;
     }
 
     public void startRoulette(Player player, String finalJob) {
-        Inventory inv = org.bukkit.Bukkit.createInventory(null, 9, "§0직업 결정 중...");
+        Component title = Component.text("직업 결정 중...", NamedTextColor.BLACK);
+        Inventory inv = Bukkit.createInventory(null, 9, title);
         player.openInventory(inv);
 
-        Material[] displayItems = { Material.CROSSBOW, Material.BREAD, Material.DIAMOND_SWORD, Material.TOTEM_OF_UNDYING };
+        Material[] displayItems = { Material.CROSSBOW, Material.BREAD, Material.DIAMOND_SWORD,
+                Material.TOTEM_OF_UNDYING };
 
         new BukkitRunnable() {
             int count = 0;
+
             @Override
             public void run() {
                 if (count >= 20) { // 20번 돌아가면 멈춤
@@ -42,12 +51,20 @@ public class RouletteService {
         Inventory inv = player.getOpenInventory().getTopInventory();
         Material finalMat = Material.BREAD;
 
-        if (job.equals("마피아")) finalMat = Material.CROSSBOW;
-        else if (job.equals("경찰")) finalMat = Material.DIAMOND_SWORD;
-        else if (job.equals("의사")) finalMat = Material.TOTEM_OF_UNDYING;
+        if (job.equals("마피아"))
+            finalMat = Material.CROSSBOW;
+        else if (job.equals("경찰"))
+            finalMat = Material.DIAMOND_SWORD;
+        else if (job.equals("의사"))
+            finalMat = Material.TOTEM_OF_UNDYING;
 
         inv.setItem(4, new ItemStack(finalMat));
-        player.sendMessage("§f[!] 당신의 직업은... §e§l" + job + " §f입니다!");
+
+        Component resultMsg = Component.text("[!] 당신의 직업은... ", NamedTextColor.WHITE)
+                .append(Component.text(job, NamedTextColor.YELLOW, TextDecoration.BOLD))
+                .append(Component.text(" 입니다!", NamedTextColor.WHITE));
+
+        player.sendMessage(resultMsg);
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
 
         if (job.equals("마피아")) {
@@ -67,9 +84,10 @@ public class RouletteService {
             @Override
             public void run() {
                 player.closeInventory();
-                player.sendMessage("§a[System] 게임이 곧 시작됩니다. 준비하세요!");
+                Component startMsg = Component.text("[System] ", NamedTextColor.GREEN)
+                        .append(Component.text("게임이 곧 시작됩니다. 준비하세요!", NamedTextColor.WHITE));
+                player.sendMessage(startMsg);
             }
         }.runTaskLater(plugin, 30);
-
     }
 }
