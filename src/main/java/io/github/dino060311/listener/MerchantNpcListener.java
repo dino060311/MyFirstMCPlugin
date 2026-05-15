@@ -15,22 +15,36 @@ import org.bukkit.inventory.MerchantRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+
 public class MerchantNpcListener implements Listener {
 
     @EventHandler
     public void onMerchantInteract(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         
-        if (entity instanceof Villager && entity.getCustomName() != null && entity.getCustomName().equals("§e무기 대장장이")) {
-            event.setCancelled(true);
+        // 1. NPC 이름 확인
+        if (entity instanceof Villager villager) {
+            Component customName = villager.customName();
             
-            openVillagerTradingGui(event.getPlayer());
+            if (customName != null) {
+                // 이름에서 색상 기호를 떼고 글자만 확인
+                String plainName = PlainTextComponentSerializer.plainText().serialize(customName);
+                
+                if (plainName.contains("무기 대장장이")) {
+                    event.setCancelled(true);
+                    openVillagerTradingGui(event.getPlayer());
+                }
+            }
         }
     }
 
     private void openVillagerTradingGui(Player player) {
-        // 커스텀 상인 객체 생성 (창 이름 설정)
-        Merchant merchant = Bukkit.createMerchant("§8무기 대장장이");
+        // 커스텀 상인 객체 생성
+        Component merchantTitle = Component.text("무기 대장장이", NamedTextColor.DARK_GRAY);
+        Merchant merchant = Bukkit.createMerchant(merchantTitle);
 
         // 거래 목록을 담을 리스트 생성
         List<MerchantRecipe> recipes = new ArrayList<>();
