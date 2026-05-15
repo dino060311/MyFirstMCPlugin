@@ -11,6 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
+import java.time.Duration;
+
 import java.util.List;
 
 public class CutsceneCommand implements CommandExecutor {
@@ -49,8 +55,26 @@ public class CutsceneCommand implements CommandExecutor {
         CutsceneListener.frozenPlayers.add(targetPlayer.getUniqueId());
 
         // 2. 극적인 타이틀과 사운드 연출
-        // sendTitle(큰 제목, 작은 제목, 나타나는 시간, 유지 시간, 사라지는 시간)
-        targetPlayer.sendTitle("§4§l[ 범인 발견! ]", "§c절대 움직이지 마라!", 10, 60, 10);
+
+        // §4§l[ 범인 발견! ] (진한 빨간색, 굵게)
+        Component mainTitle = Component.text("[ 범인 발견! ]")
+                .color(NamedTextColor.DARK_RED)
+                .decorate(TextDecoration.BOLD);
+
+        // §c절대 움직이지 마라! (빨간색)
+        Component subTitle = Component.text("절대 움직이지 마라!")
+                .color(NamedTextColor.RED);
+
+        // 시간 설정 (마인크래프트 1틱 = 50밀리초)
+        // fadeIn: 10틱(500ms), stay: 60틱(3000ms), fadeOut: 10틱(500ms)
+        Title.Times times = Title.Times.times(
+                Duration.ofMillis(500),
+                Duration.ofMillis(3000),
+                Duration.ofMillis(500)
+        );
+
+        Title title = Title.title(mainTitle, subTitle, times);
+        targetPlayer.showTitle(title);
 
         // 천둥 번개 소리와 엔더드래곤 울음소리를 섞어 긴장감 극대화!
         targetPlayer.playSound(targetPlayer.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
