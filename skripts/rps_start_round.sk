@@ -69,9 +69,12 @@ command /rps_start_round:
         wait 3 seconds
         
         # 4. 시간 종료 후 창 닫고 결과 확인
-        close {_p1}'s inventory
-        close {_p2}'s inventory
-        make {_p1} execute command "/rps_check_result"
+        if {_p1} is online:
+            close {_p1}'s inventory
+        if {_p2} is online:
+            close {_p2}'s inventory
+        if {_p1} is online:
+            make {_p1} execute command "/rps_check_result"
 
 # --- GUI 클릭 제어 (마우스로 선택) ---
 on inventory click:
@@ -154,12 +157,13 @@ on damage:
                         play sound "item.shield.block" to victim and attacker
                         play sound "entity.item.break" to victim and attacker
                         
-                        remove diamond sword from attacker's inventory
-                        remove shield from victim's inventory
+                        remove 1 diamond sword named "§c§l승리자의 검" from attacker's inventory
+                        remove 1 shield named "§b§l패배자의 방패" from victim's inventory
                         
                         send "{@p} 3초 뒤 가위바위보를 다시 시작합니다!" to victim and attacker
                         wait 3 seconds
-                        make attacker execute command "/rps_start_round"
+                        if attacker is online:
+                            make attacker execute command "/rps_start_round"
                         
                     # [상황 B] 방패로 못 막고 맞았을 때
                     else:
@@ -167,14 +171,15 @@ on damage:
                         send "§c공격에 적중했습니다! 무기가 부서집니다." to victim and attacker
                         play sound "entity.item.break" to attacker
                         
-                        remove diamond sword from attacker's inventory
-                        remove shield from victim's inventory
+                        remove 1 diamond sword named "§c§l승리자의 검" from attacker's inventory
+                        remove 1 shield named "§b§l패배자의 방패" from victim's inventory
                         
                         wait 1 tick
                         if health of victim > 0: 
                             send "{@p} 3초 뒤 가위바위보를 다시 시작합니다!" to victim and attacker
                             wait 3 seconds
-                            make attacker execute command "/rps_start_round"
+                            if attacker is online:
+                                make attacker execute command "/rps_start_round"
                             
                 else:
                     cancel event
@@ -200,8 +205,8 @@ on death of player:
         broadcast "{@p} §e%{_winner}%§f님이 가위바위보 데스매치에서 최종 승리했습니다!"
         
         # 무기 압수
-        remove diamond sword from {_winner}'s inventory
-        remove shield from victim's inventory
+        remove 1 diamond sword named "§c§l승리자의 검" from {_winner}'s inventory
+        remove 1 shield named "§b§l패배자의 방패" from victim's inventory
         
         # 게임 변수 완벽 초기화 (무한 루프 종료)
         delete {rps.role::%victim%}
