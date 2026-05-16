@@ -1,0 +1,104 @@
+# 1. 게임 시작 명령어
+command /순발력게임:
+    trigger:
+        if {game::%player%::active} is true:
+            send "&c&l[시스템] &f이미 게임이 진행 중입니다!" to player
+            stop
+            
+        set {game::%player%::active} to true
+        set {game::%player%::score} to 0
+        set {game::%player%::time} to 20
+        
+        # [블라인드 마스킹] 유저의 개인 보관함 백업 및 검은 화면 처리
+        loop integers between 0 and 35:
+            set {game::%player%::backup::%loop-integer%} to slot loop-integer of player's inventory
+            set slot loop-integer of player's inventory to black stained glass pane named " "
+        
+        # [사이드바 UI] SkBee 패스트보드 타이틀 세팅
+        set title of player's fastboard to "&l[ 순발력 테스트 ]"
+        UpdateScoreboard(player)
+        
+        set metadata tag "reaction_gui" of player to chest inventory with 4 rows named "&l[ 순발력 테스트 ]"
+        open (metadata tag "reaction_gui" of player) to player
+        
+        SpawnReactionTarget(player)
+        ReactionGameLoop(player)
+
+# 2. 사이드바(스코어보드) 실시간 갱신 함수
+function UpdateScoreboard(p: player):
+    if {game::%{_p}%::active} is true:
+        set line 3 of {_p}'s fastboard to "  "
+        set line 1 of {_p}'s fastboard to " &f현재 점수: &e%{game::%{_p}%::score}%점 "
+        set line 2 of {_p}'s fastboard to " &f남은 시간: &c%{game::%{_p}%::time}%초 "
+
+# 3. 타겟 생성 함수
+function SpawnReactionTarget(p: player):
+    if {game::%{_p}%::active} is true:
+        set {_inv} to metadata tag "reaction_gui" of {_p}
+        
+        loop integers between 0 and 35:
+            set slot loop-integer of {_inv} to gray stained glass pane named " "
+            
+        set {_slot} to a random integer between 0 and 35
+        set slot {_slot} of {_inv} to green stained glass pane named "&a&l[ 클릭! ]" with lore "&f빠르게 클릭해서 점수를 획득하세요!"
+
+# 4. 비동기 타이머 및 로직 처리 루프
+function ReactionGameLoop(p: player):
+    while {game::%{_p}%::active} is true:
+        
+        if {game::%{_p}%::time} <= 0:
+            set {_finalScore} to {game::%{_p}%::score} 
+            
+            loop integers between 0 and 35:
+                set slot loop-integer of {_p}'s inventory to {game::%{_p}%::backup::%loop-integer%}
+            delete {game::%{_p}%::backup::*}
+            
+            delete {game::%{_p}%::active}
+            delete {game::%{_p}%::time}
+            delete {game::%{_p}%::score}
+            
+            clear fastboard of {_p}
+            close inventory of {_p}
+            
+            play sound "entity.player.levelup" with volume 1 and pitch 1 to {_p}
+            send title "&c&lTIME OUT!" with subtitle "&f당신의 최종 점수: &e&l%{_finalScore}%점" to {_p} for 3 seconds
+            send "&a&l[시스템] &f게임이 종료되었습니다! (최종 점수: &e%{_finalScore}%점&f)" to {_p}
+            stop loop
+            
+        remove 1 from {game::%{_p}%::time}
+        UpdateScoreboard({_p})
+        wait 1 second
+
+# 5. 인벤토리 클릭 이벤트 제어
+on inventory click:
+    if {game::%player%::active} is true:
+        cancel event 
+        
+        if event-inventory = (metadata tag "reaction_gui" of player):
+            if type of event-item is green stained glass pane:
+                if event-item's name is "&a&l[ 클릭! ]":
+                    add 1 to {game::%player%::score}
+                    play sound "entity.experience_orb.pickup" with volume 1 and pitch 2 to player
+                    
+                    UpdateScoreboard(player)
+                    SpawnReactionTarget(player)
+
+# 6. 인벤토리 닫기 및 아이템 복구 (중도 기권 처리)
+on inventory close:
+    if {game::%player%::active} is true:
+        if event-inventory = (metadata tag "reaction_gui" of player):
+            
+            # 백업 아이템 복구 (ESC 강제 종료 시)
+            loop integers between 0 and 35:
+                set slot loop-integer of player's inventory to {game::%player%::backup::%loop-integer%}
+            delete {game::%player%::backup::*}
+            
+            if {game::%player%::time} > 0:
+                delete {game::%player%::active}
+                delete {game::%player%::time}
+                delete {game::%player%::score}
+                
+                clear fastboard of player
+                
+                play sound "block.note_block.bass" with volume 1 and pitch 1 to player
+                send "&c&l[경고] &f비정상적으로 인벤토리를 닫아 &c기권 처리&f 되었습니다." to player
