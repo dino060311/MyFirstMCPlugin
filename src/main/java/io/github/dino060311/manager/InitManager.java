@@ -33,7 +33,6 @@ public class InitManager {
         plugin.getCommand("컷신").setExecutor(new CutsceneCommand(plugin));
         plugin.getCommand("랜덤직업").setExecutor(new JobMenuCommand(roleManager, jobService, rouletteService));
         plugin.getCommand("무기대장장이").setExecutor(new MerchantNpcCommand());
-        plugin.getCommand("서버명령어").setExecutor(new HelpCommand());
         plugin.getCommand("보스좀비소환").setExecutor(new BossSpawnCommand());
     }
 
