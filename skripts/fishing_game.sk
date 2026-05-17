@@ -1,0 +1,113 @@
+import:
+    org.bukkit.event.player.PlayerFishEvent
+    
+options:
+    p: §f[§bFISHING§f]
+    rod_name: §b[이벤트용] §e전설의 낚싯대
+    
+# 1. 명령어 제어부 (아이템 지급 및 자동 회수 로직)
+command /낚시게임:
+    trigger:
+        if {fish::active::%uuid of player%} is true:
+            send "{@p} §c이미 낚시 게임이 진행 중입니다!"
+            stop
+            
+        # 게임 세션 데이터 초기화
+        set {fish::active::%uuid of player%} to true
+        set {fish::score::%uuid of player%} to 0
+        set {fish::timer::%uuid of player%} to 60
+        
+        # 게임 시작 시 이벤트용 특별 낚싯대 지급
+        set {_rod} to 1 fishing rod named "{@rod_name}"
+        set line 1 of lore of {_rod} to "§7낚시 게임 전용 낚싯대입니다."
+        set line 2 of lore of {_rod} to "§c게임 종료 시 자동으로 소멸합니다."
+        enchant {_rod} with luck of the sea 2
+        enchant {_rod} with lure 2
+        give {_rod} to player
+        
+        send title "§b§l낚시 게임 시작!" with subtitle "60초 동안 최대한 많은 물고기를 낚아 올리세요!" to player
+        play sound "ui.toast.challenge_complete" to player
+        
+        # 타임어택 루프 시작
+        while {fish::timer::%uuid of player%} > 0:
+            if player is not online:
+                stop
+            if {fish::active::%uuid of player%} is not set:
+                stop
+                
+            send action bar "⏰ §e남은 시간: §f%{fish::timer::%uuid of player%}%초 §7| §f점수: §b%{fish::score::%uuid of player%}%점" to player
+            remove 1 from {fish::timer::%uuid of player%}
+            wait 1 second
+            
+        # 타임오버 결과 처리
+        if player is online:
+            if {fish::active::%uuid of player%} is true:
+                send title "§c§l타임오버! 게임 종료" with subtitle "최종 획득 점수: §e%{fish::score::%uuid of player%}%점" to player
+                play sound "entity.player.levelup" to player
+                
+                # 게임 정상 종료 시 인벤토리에서 이벤트 낚싯대 확실하게 삭제 (이름 추적 루프 적용)
+                loop items in player's inventory:
+                    if name of loop-item is "{@rod_name}":
+                        remove loop-item from player
+                
+        # 세션 데이터 안전 삭제
+        delete {fish::active::%uuid of player%}
+        delete {fish::score::%uuid of player%}
+        delete {fish::timer::%uuid of player%}
+        
+# 2. 실시간 드롭 & UI 시스템
+on PlayerFishEvent:
+    set {_p} to event.getPlayer()
+    
+    if {fish::active::%uuid of {_p}%} is true:
+        set {_state} to event.getState().toString()
+        
+        if {_state} is "CAUGHT_FISH":
+            # 공중에서 플레이어에게 날아오고 있는 아이템 엔티티 객체를 잡아냅니다.
+            set {_caughtEntity} to event.getCaught()
+            
+            set {_sub} to random integer between 1 and 100
+            
+            if {_sub} <= 55: # 대구 (55%)
+                set {_i} to 1 cod named "§f생대구"
+                set line 1 of lore of {_i} to "§7가장 흔하게 볼 수 있는 담백한 물고기."
+                add 10 to {fish::score::%uuid of {_p}%}
+                send "{@p} §f생대구§f를 낚았습니다! §a(+10점)" to {_p}
+                play sound "entity.experience_orb.pickup" with pitch 1.0 to {_p}
+                
+            else if {_sub} <= 80: # 연어 (25%)
+                set {_i} to 1 salmon named "§e생연어"
+                set line 1 of lore of {_i} to "§7선홍빛 살을 가진 영양 가득한 물고기."
+                add 20 to {fish::score::%uuid of {_p}%}
+                send "{@p} §e생연어§f를 낚았습니다! §a(+20점)" to {_p}
+                play sound "entity.experience_orb.pickup" with pitch 1.3 to {_p}
+                
+            else if {_sub} <= 95: # 복어 (15%)
+                set {_i} to 1 pufferfish named "§d복어"
+                set line 1 of lore of {_i} to "§7위험한 독을 품고 있어 부풀어 오른 물고기."
+                add 40 to {fish::score::%uuid of {_p}%}
+                send "{@p} §d복어§f를 낚았습니다! §a(+40점)" to {_p}
+                play sound "entity.experience_orb.pickup" with pitch 1.7 to {_p}
+                
+            else: # 열대어 (5%)
+                set {_i} to 1 tropical fish named "§b열대어"
+                set line 1 of lore of {_i} to "§7빛깔이 아주 다채롭고 화려한 관상용 물고기."
+                add 60 to {fish::score::%uuid of {_p}%}
+                send "{@p} §b열대어§f를 낚았습니다! §a(+60점)" to {_p}
+                play sound "entity.experience_orb.pickup" with pitch 2.0 to {_p}
+                
+            # 공중에서 날아오는 바닐라 생선의 데이터를 우리가 세팅한 커스텀 생선({_i})으로 실시간 교체
+            {_caughtEntity}.setItemStack({_i})
+            
+            # 실시간 액션바 동적 리렌더링
+            send action bar "⏰ §e남은 시간: §f%{fish::timer::%uuid of {_p}%}%초 §7| §f점수: §b%{fish::score::%uuid of {_p}%}%점" to {_p}
+            
+# 3. 예외 상황 세션 예방 관리 (중도 퇴장 시 회수)
+on quit:
+    if {fish::active::%uuid of player%} is true:
+        loop items in player's inventory:
+            if name of loop-item is "{@rod_name}":
+                remove loop-item from player
+        delete {fish::active::%uuid of player%}
+        delete {fish::score::%uuid of player%}
+        delete {fish::timer::%uuid of player%}
