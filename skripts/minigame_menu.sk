@@ -1,0 +1,69 @@
+# [미니게임 통합 GUI 메뉴 시스템]
+options:
+    p: §f[§bMENU§f]
+
+command /미니게임:
+    trigger:
+        # 3줄(27칸) 크기의 Custom GUI 생성
+        open chest inventory with 3 rows named "§e§l🎮 미니게임 통합 제어 센터" to player
+        
+        # 배경 채우기
+        set {_slot} to 0
+        loop 27 times:
+            set slot {_slot} of player's current inventory to gray stained glass pane named "§7"
+            add 1 to {_slot}
+            
+        # 1. 가위바위보 데스매치 버튼 (11번 슬롯)
+        set slot 11 of player's current inventory to diamond sword named "§6§l가위바위보 데스매치" with lore "§7------------------------", "§f1:1 심리전 PvP 미니게임", "§7------------------------", "", "§e[ 좌클릭 ] §a/가위바위보 명령어 입력창 띄우기", "§e[ 우클릭 ] §f게임 설명 보기"
+        
+        # 2. 타임어택 낚시 게임 버튼 (13번 슬롯)
+        set slot 13 of player's current inventory to fishing rod named "§b§l타임어택 낚시 게임" with lore "§7------------------------", "§f실시간 타임어택 낚시게임", "§7------------------------", "", "§e[ 좌클릭 ] §a/낚시게임 즉시 실행", "§e[ 우클릭 ] §f게임 설명 보기"
+        
+        # 3. 실시간 순발력 테스트 버튼 (15번 슬롯)
+        set slot 15 of player's current inventory to clock named "§e§l순발력 테스트 미니게임" with lore "§7------------------------", "§f실시간 반응 속도 측정 게임", "§7------------------------", "", "§e[ 좌클릭 ] §a/순발력게임 즉시 실행", "§e[ 우클릭 ] §f게임 설명 보기"
+
+# GUI 클릭 이벤트 제어
+on inventory click:
+    name of player's current inventory is "§e§l🎮 미니게임 통합 제어 센터"
+    cancel event # 아이템을 인벤토리에서 꺼내지 못하게 고정
+    
+    if event-item is a gray stained glass pane:
+        stop
+
+    # 1. 가위바위보 데스매치 클릭 시
+    if index of event-slot is 11:
+        close player's inventory
+        if click type is left mouse button:
+            send "§7[팁] 대결할 플레이어의 이름을 뒤에 적어주세요! §e(예: /가위바위보 닉네임)" to player
+            make player execute command "/가위바위보"
+        else if click type is right mouse button:
+            send "" to player
+            send "§6§l[가위바위보 데스매치] 설명" to player
+            send "§f- 상대를 지정해 결투를 신청하고, GUI창에서 가위바위보를 선택합니다." to player
+            send "§f- 이긴 사람은 §c날카로운 검§f을, 진 사람은 §9방패§f를 받아 PvP를 진행합니다." to player
+            send "" to player
+
+    # 2. 타임어택 낚시 게임 클릭 시
+    if index of event-slot is 13:
+        close player's inventory
+        if click type is left mouse button:
+            make player execute command "/낚시게임"
+        else if click type is right mouse button:
+            send "" to player
+            send "§b§l[타임어택 낚시 게임] 설명" to player
+            send "§f- 60초의 제한 시간 동안 바다나 물가에서 최대한 많은 물고기를 낚아야 합니다." to player
+            send "§f- 대구, 연어, 복어, 열대어 등 낚인 생선의 희귀도에 따라 다른 점수를 획득합니다." to player
+            send "§f- 액션바를 통해 실시간으로 남은 시간과 내 점수를 확인하며 경쟁해 보세요!" to player
+            send "" to player
+
+    # 3. 순발력 테스트 클릭 시
+    if index of event-slot is 15:
+        close player's inventory
+        if click type is left mouse button:
+            make player execute command "/순발력게임"
+        else if click type is right mouse button:
+            send "" to player
+            send "§e§l[순발력 테스트] 설명" to player
+            send "§f- 화면에 나타나는 GUI 창 속에서 목표 아이템을 빠르게 찾아 클릭합니다." to player
+            send "§f- 실시간으로 플레이어들의 반응 속도를 밀리초(ms) 단위로 정밀 측정합니다." to player
+            send "" to player
