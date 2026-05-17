@@ -1,0 +1,13 @@
+command /서버명령어:
+    trigger:
+        send ""
+        send "§b§l[ SERVER COMMAND HELP ]"
+        send "§7--------------------------------"
+        send "§e/마법지팡이 §f: 화염 마법 지팡이"
+        send "§e/시한폭탄 §f: 투척형 시한폭탄"
+        send "§e/직업선택 §f: 직업 선택 GUI 메뉴"
+        send "§e/보스좀비소환 §f: 직업 선택 GUI 메뉴"
+        send "§e/미니게임 §f: 미니게임 통합 메뉴 열기"
+        send "§7--------------------------------"
+        send ""
+        
