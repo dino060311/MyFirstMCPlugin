@@ -1,5 +1,8 @@
 package io.github.dino060311.service;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import io.github.dino060311.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,7 +26,13 @@ public class BossSkillService {
 
         // 주변 플레이어 경고
         bossLoc.getWorld().getNearbyPlayers(bossLoc, 15).forEach(player -> {
-            player.sendMessage("§6⚠ §c보스가 힘을 모으고 있습니다! 피하세요!");
+            Component bossMsg = Component.text("[보스 좀비] ", NamedTextColor.DARK_RED)
+                    .append(Component.text("저리 비켜라!", NamedTextColor.WHITE, TextDecoration.BOLD));
+            Component warningMsg = Component.text("⚠ ", NamedTextColor.GOLD)
+                    .append(Component.text("보스가 힘을 모으고 있습니다! 피하세요!", NamedTextColor.RED));
+
+            player.sendMessage(bossMsg);
+            player.sendMessage(warningMsg);
         });
 
         // 2초 뒤 폭발
@@ -49,15 +58,32 @@ public class BossSkillService {
 
         // 주변 플레이어 경고
         bossLoc.getWorld().getNearbyPlayers(bossLoc, 20).forEach(player -> {
-            player.sendMessage("§4☠ §c§l보스가 마지막 힘을 끌어올립니다!");
+            Component finalWarning = Component.text("☠ ", NamedTextColor.DARK_RED)
+                    .append(Component.text("보스가 마지막 힘을 끌어올립니다!", NamedTextColor.RED, TextDecoration.BOLD));
+
+            player.sendMessage(finalWarning);
         });
+
+        // 최종페이즈 증원군 소환
+        for (int i = 0; i < 5; i++) {
+            Location spawnLoc = bossLoc.clone().add((Math.random() * 6) - 3, 0, (Math.random() * 6) - 3);
+
+            bossLoc.getWorld().spawn(spawnLoc, org.bukkit.entity.Zombie.class, zombie -> {
+                zombie.customName(Component.text("보스의 부하", NamedTextColor.DARK_GRAY));
+                zombie.setCustomNameVisible(true);
+                zombie.getEquipment().setHelmet(new org.bukkit.inventory.ItemStack(org.bukkit.Material.IRON_HELMET));
+            });
+        }
 
         // 2초 후 번개 강림
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             bossLoc.getWorld().getNearbyEntities(bossLoc, 10.0, 10.0, 10.0).forEach(entity -> {
 
                 if (entity instanceof Player p) {
-                    p.sendMessage("§c[보스 좀비] §4§l이것이 나의 마지막 힘이다...!");
+                    Component lastWords = Component.text("[보스 좀비] ", NamedTextColor.RED)
+                            .append(Component.text("이것이 나의 마지막 힘이다...!", NamedTextColor.WHITE, TextDecoration.BOLD));
+
+                    p.sendMessage(lastWords);
                     p.getWorld().strikeLightning(p.getLocation());
                 }
             });
