@@ -7,10 +7,17 @@
 
 ## 🛠️ 개발 환경 및 기술 스택
 
+### 💻 Backend & Core
 - **Language:** Java 21 (LTS)
 - **Build Tool:** Maven
-- **API:** PaperMC API (최신 버전 호환)
+- **Server Platform:** PaperMC 1.21.1
 - **IDE:** Visual Studio Code
+
+### 📜 Scripting & Extension
+- **Engine:** Skript 2.9.3
+- **Addons:**
+  - **SkBee 3.6.1** — FastBoard, Metadata, NBT 및 고급 Skript 기능 확장
+  - **skript-reflect 2.6.2** — Bukkit/Paper API 연동 및 Java 클래스 접근
 
 ---
 
