@@ -15,7 +15,7 @@ public class InitManager {
         RoleManager roleManager = new RoleManager();
         JobService jobService = new JobService(roleManager);
         RouletteService rouletteService = new RouletteService(plugin);
-        BossSkillService bossSkillService = new BossSkillService();
+        BossSkillService bossSkillService = new BossSkillService(plugin);
 
         registerCommands(plugin, roleManager, jobService, rouletteService);
         registerEvents(plugin, roleManager, jobService, rouletteService, bossSkillService);
