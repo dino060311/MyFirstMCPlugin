@@ -17,6 +17,12 @@ public class BossSpawnCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player p) {
+
+            if (BossManager.hasBoss()) {
+                p.sendMessage("§c이미 보스 좀비가 존재합니다!");
+                return true;
+            }
+
             Zombie boss = p.getWorld().spawn(p.getLocation(), Zombie.class);
 
             // 보스 이름 설정
@@ -31,6 +37,9 @@ public class BossSpawnCommand implements CommandExecutor {
             boss.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(1.0);
             boss.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(150.0);
             boss.setHealth(150.0);
+
+            // 현재 보스를 시스템에 등록
+            BossManager.setCurrentBoss(boss);
 
             // 보스바 생성
             BossManager.createBossBar("§4§l[1페이즈] 강화된 보스 좀비");

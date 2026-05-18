@@ -39,11 +39,10 @@ public class BossListener implements Listener {
                     boss.customName(Component.text("[2페이즈] 분노한 보스 좀비").color(NamedTextColor.GOLD)
                             .decorate(TextDecoration.BOLD));
 
-                    //스킬 발동 및 보스바 변경
+                    // 스킬 발동 및 보스바 변경
                     skillService.areaPush(boss.getLocation());
                     BossManager.updatePhase("§6§l[2페이즈] 분노한 보스 좀비", BarColor.YELLOW);
-                } 
-                else if (healthPercent <= 0.2 && !name.contains("[최종페이즈]")) {
+                } else if (healthPercent <= 0.2 && !name.contains("[최종페이즈]")) {
                     // 체력이 20% 이하로 떨어졌고, 아직 최종페이즈로 변신하지 않았다면
 
                     // 좀비 머리 위 이름표 변경
@@ -66,6 +65,7 @@ public class BossListener implements Listener {
             String name = PlainTextComponentSerializer.plainText().serialize(e.getEntity().customName());
             if (name.contains("보스 좀비")) {
                 BossManager.removeBossBar();
+                BossManager.clearBoss();
             }
         }
     }

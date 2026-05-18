@@ -4,13 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class BossManager {
     private static BossBar bossBar;
+    private static LivingEntity currentBoss;
 
     public static void createBossBar(String title) {
-        if (bossBar != null) bossBar.removeAll();
+        if (bossBar != null)
+            bossBar.removeAll();
         bossBar = Bukkit.createBossBar(title, BarColor.RED, BarStyle.SEGMENTED_10);
         for (Player p : Bukkit.getOnlinePlayers()) {
             bossBar.addPlayer(p);
@@ -35,5 +38,21 @@ public class BossManager {
             bossBar.removeAll();
             bossBar = null;
         }
+    }
+
+    public static void setCurrentBoss(LivingEntity boss) {
+        currentBoss = boss;
+    }
+
+    public static LivingEntity getCurrentBoss() {
+        return currentBoss;
+    }
+
+    public static boolean hasBoss() {
+        return currentBoss != null && !currentBoss.isDead();
+    }
+
+    public static void clearBoss() {
+        currentBoss = null;
     }
 }
