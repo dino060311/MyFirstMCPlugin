@@ -1,0 +1,164 @@
+options:
+	p: §f[§aSYSTEM§f]
+	revive_time: 5
+	bleed_time: 15
+
+# 1. 플레이어 사망 방지 → 기절 상태 전환
+on damage:
+    victim is a player
+
+    if {forcekill::%uuid of victim%} is true:
+        stop
+
+    if {downed::%uuid of victim%} is true:
+        cancel event
+        stop
+
+    if damage >= health of victim:
+        cancel event
+        set health of victim to 1
+
+        set {downed::%uuid of victim%} to true
+        set {downed::timer::%uuid of victim%} to {@bleed_time}
+
+        apply infinite slowness of tier 255 to victim
+        apply infinite jump boost of tier 250 to victim
+        apply infinite blindness of tier 1 to victim
+
+        broadcast "{@p} §c%victim%님이 쓰러졌습니다! 누군가 도와줘야 합니다!"
+        play sound "entity.blaze.death" with volume 1 and pitch 0.5 to all players
+
+        while {downed::%uuid of victim%} is true:
+            if {downed::timer::%uuid of victim%} <= 0:
+                set {forcekill::%uuid of victim%} to true
+                delete {downed::%uuid of victim%}
+                delete {reviving::%uuid of victim%}
+                kill victim
+                stop
+
+            # ★ [수정됨] is not set 대신 is not true 로 변경하여 철통 방어!
+            if {reviving::%uuid of victim%} is not true:
+                send action bar "§c🩸 출혈 중... §f사망까지 §c%{downed::timer::%uuid of victim%}%초" to victim
+            
+            remove 1 from {downed::timer::%uuid of victim%}
+            wait 1 second
+
+# 2. 플레이어 소생 시스템 (시프트 웅크리기 기반)
+on sneak toggle:
+    # 아주 잠깐 대기하여 시프트를 눌렀는지 뗐는지 정확히 판별
+    wait 1 tick
+    # 시프트를 뗄 때는 코드를 실행하지 않고 멈춤
+    if player is not sneaking:
+        stop
+
+    # 본인이 기절 상태면 치료 불가
+    if {downed::%uuid of player%} is true:
+        stop
+
+    # 주변 2.5블록 반경에 있는 기절한 플레이어 탐색
+    set {_target} to none
+    loop players in radius 2.5 around player:
+        if loop-player is not player:
+            if {downed::%uuid of loop-player%} is true:
+                set {_target} to loop-player
+                stop loop # 한 명을 찾으면 더 이상 찾지 않음
+
+    # 주변에 기절한 플레이어가 없으면 작동 안 함
+    if {_target} is none:
+        stop
+
+    # 대상이 이미 다른 사람에게 치료받고 있는지 확인
+    if {reviving::%uuid of {_target}%} is true:
+        send "{@p} §c누군가 이미 치료 중입니다!" to player
+        stop
+
+    # 치료 시작! 변수 세팅
+    set {reviving::%uuid of {_target}%} to true
+    set {_time} to {@revive_time}
+    set {_loc} to location of player
+
+    send "{@p} §a%{_target}%님을 치료합니다. 시프트를 떼거나 움직이지 마세요!" to player
+    send "{@p} §a%player%님이 당신을 치료 중입니다!" to {_target}
+
+    # 5초 동안 카운트다운 시작 (시프트 유지 및 움직임 검사)
+    while {_time} > 0:
+        # 1. 시프트를 뗐는지 검사
+        if player is not sneaking:
+            send "{@p} §c시프트를 떼서 치료가 중단되었습니다!" to player
+            send "{@p} §c치료가 중단되었습니다!" to {_target}
+            delete {reviving::%uuid of {_target}%}
+            stop
+
+        # 2. 움직였는지 검사
+        if distance between player and {_loc} > 0.5:
+            send "{@p} §c움직여서 치료가 중단되었습니다!" to player
+            send "{@p} §c치료가 중단되었습니다!" to {_target}
+            delete {reviving::%uuid of {_target}%}
+            stop
+
+        # 3. 대상이 도중에 강제 사망했는지 검사
+        if {downed::%uuid of {_target}%} is not set:
+            delete {reviving::%uuid of {_target}%}
+            stop
+
+        send action bar "§a✚ 치료 중... §f남은 시간: §a%{_time}%초" to player
+        send action bar "§a✚ 치료받는 중... §f남은 시간: §a%{_time}%초" to {_target}
+
+        remove 1 from {_time}
+        wait 1 second
+
+    # 무사히 5초를 버텼다면 소생 성공 처리
+    delete {downed::%uuid of {_target}%}
+    delete {reviving::%uuid of {_target}%}
+
+    remove slowness from {_target}
+    remove jump boost from {_target}
+    remove blindness from {_target}
+
+    set health of {_target} to 3
+
+    broadcast "{@p} §a%player%님이 %{_target}%님을 살려냈습니다!"
+    play sound "entity.player.levelup" to player
+    play sound "entity.player.levelup" to {_target}
+
+# 3. 사망/리스폰 시 변수 초기화
+on death of player:
+	delete {downed::%uuid of victim%}
+	delete {reviving::%uuid of victim%}
+	delete {forcekill::%uuid of victim%}
+
+	remove slowness from victim
+	remove jump boost from victim
+	remove blindness from victim
+
+on respawn:
+	delete {downed::%uuid of player%}
+	delete {reviving::%uuid of player%}
+	delete {forcekill::%uuid of player%}
+
+	remove slowness from player
+	remove jump boost from player
+	remove blindness from player
+
+
+# 4. 관리자용 강제 소생 명령어
+command /강제소생 [<player>]:
+	permission: op
+	trigger:
+		set {_t} to arg 1
+		if {_t} is not set:
+			set {_t} to player
+
+		delete {downed::%uuid of {_t}%}
+		delete {reviving::%uuid of {_t}%}
+		delete {downed::timer::%uuid of {_t}%}
+		delete {forcekill::%uuid of {_t}%}
+
+		remove slowness from {_t}
+		remove jump boost from {_t}
+		remove blindness from {_t}
+
+		set health of {_t} to 20
+
+		send "{@p} §a%{_t}%님의 기절 상태를 초기화했습니다!" to player
+		play sound "entity.player.levelup" to player
