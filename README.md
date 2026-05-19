@@ -8,12 +8,14 @@
 ## 🛠️ 개발 환경 및 기술 스택
 
 ### 💻 Backend & Core
+
 - **Language:** Java 21 (LTS)
 - **Build Tool:** Maven
 - **Server Platform:** PaperMC 1.21.1
 - **IDE:** Visual Studio Code
 
 ### 📜 Scripting & Extension
+
 - **Engine:** Skript 2.9.3
 - **Addons:**
   - **SkBee 3.6.1** — FastBoard, Metadata, NBT 및 고급 Skript 기능 확장
@@ -280,4 +282,22 @@ https://github.com/user-attachments/assets/ce85301a-fe03-4912-8a56-e9db0e8c9a99
 > **[낚시 게임 작동 검증]**
 > ![낚시 게임](images/fishing_game.gif)
 
-> _Last Updated: 2026-05-18_
+---
+
+### 21. 기절 및 소생 시스템
+
+- **사망 방지 기반 기절 시스템:** 치명적인 피해를 받으면 즉시 사망하는 대신 **기절 상태(Down State)** 로 전환되도록 구현하여 팀 기반 협동 플레이 요소를 강화했습니다. 제한 시간 내 구조받지 못하면 최종 사망 처리됩니다.
+- **상태 제어 및 행동 제한:** 기절한 플레이어에게 극단적인 `Slowness`, `Jump Boost`, `Blindness` 효과를 적용해 이동 및 시야를 제한하고, 추가 피해를 무효화하여 상태를 안정적으로 유지하도록 설계했습니다.
+- **캐스팅 기반 소생 로직:** 기절한 플레이어 근처에서 **시프트(웅크리기)를 일정 시간 유지**해야 하는 캐스팅형 소생 시스템을 구현했습니다. 치료 도중 이동하거나 시프트를 해제하면 즉시 취소되도록 설계하여 상황극 긴장감을 높였습니다.
+- **실시간 출혈 및 UX 연출:** 액션바(Action Bar)를 활용해 **남은 출혈 시간 및 치료 진행도**를 실시간으로 표시하여 플레이어가 현재 상태를 직관적으로 파악할 수 있도록 개선했습니다.
+- **예외 상황 및 상태 복구 처리:** `forcekill` 플래그를 활용해 무적 상태 충돌 문제를 해결했으며, 사망/리스폰 시 모든 디버프 및 상태 데이터를 초기화하여 데이터 꼬임을 방지했습니다.
+
+> **[기절 시스템 작동 검증]**
+> ![기절 시스템](images/down_system.gif)
+
+> **[소생 시스템 작동 검증]**
+> ![소생 시스템](images/revive_system.gif)
+
+---
+
+> _Last Updated: 2026-05-19_
