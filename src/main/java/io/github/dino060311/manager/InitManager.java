@@ -42,6 +42,7 @@ public class InitManager {
 
         // 시스템 관련
         pm.registerEvents(new ChatListener(plugin), plugin);
+        pm.registerEvents(new InteractListener(), plugin);
         pm.registerEvents(new JoinListener(), plugin);
 
         // 아이템 및 기능 관련
