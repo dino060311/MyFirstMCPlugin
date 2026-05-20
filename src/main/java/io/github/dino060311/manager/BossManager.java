@@ -54,5 +54,6 @@ public class BossManager {
 
     public static void clearBoss() {
         currentBoss = null;
+        removeBossBar();
     }
 }
