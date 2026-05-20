@@ -1,7 +1,7 @@
 name: MyFirstMCPlugin
 version: 1.0
 main: io.github.dino060311.Main
-api-version: 1.20
+api-version: 1.21
 author: dino060311
 description: Bukkit API를 활용한 첫 번째 마인크래프트 서버 플러그인 프로젝트입니다.
 commands:
