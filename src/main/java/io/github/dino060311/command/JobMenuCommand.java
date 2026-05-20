@@ -3,6 +3,9 @@ package io.github.dino060311.command;
 import io.github.dino060311.manager.RoleManager;
 import io.github.dino060311.service.JobService;
 import io.github.dino060311.service.RouletteService;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +31,8 @@ public class JobMenuCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         List<Player> players = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());
         if (players.size() < 3) {
-            sender.sendMessage("§c[System] 최소 3명이 필요합니다.");
+            sender.sendMessage(Component.text("[System] ", NamedTextColor.RED)
+                    .append(Component.text("최소 3명이 필요합니다.", NamedTextColor.WHITE)));
             return true;
         }
 
