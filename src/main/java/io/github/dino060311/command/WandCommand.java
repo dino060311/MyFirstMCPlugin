@@ -14,17 +14,21 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public class WandCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            
-            // 블레이즈 막대기(BLAZE_ROD)를 마법 지팡이로 만듭니다.
+        if (sender instanceof Player player) {
+
+            // 화염 마법 지팡이 생성
             ItemStack wand = new ItemStack(Material.BLAZE_ROD);
             ItemMeta meta = wand.getItemMeta();
-            meta.displayName(Component.text("§6[ 화염 마법 지팡이 ]").color(NamedTextColor.GOLD));
+            meta.displayName(Component.text("[ 화염 마법 지팡이 ]", NamedTextColor.GOLD));
             wand.setItemMeta(meta);
-            
+
+            // 플레이어 지급
             player.getInventory().addItem(wand);
-            player.sendMessage("§a[System] §f화염 마법 지팡이를 획득했습니다!");
+
+            Component message = Component.text("[System] ", NamedTextColor.GREEN)
+                    .append(Component.text("화염 마법 지팡이를 획득했습니다!", NamedTextColor.WHITE));
+
+            player.sendMessage(message);
             return true;
         }
         return false;
