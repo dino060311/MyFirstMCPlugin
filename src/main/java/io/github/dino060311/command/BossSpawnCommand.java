@@ -19,15 +19,15 @@ public class BossSpawnCommand implements CommandExecutor {
         if (sender instanceof Player p) {
 
             if (BossManager.hasBoss()) {
-                p.sendMessage("§c이미 보스 좀비가 존재합니다!");
+                p.sendMessage(Component.text("이미 보스 좀비가 존재합니다!", NamedTextColor.RED));
                 return true;
             }
 
             Zombie boss = p.getWorld().spawn(p.getLocation(), Zombie.class);
 
             // 보스 이름 설정
-            boss.customName(Component.text("§4§l[1페이즈] 강화된 보스 좀비").color(NamedTextColor.DARK_RED)
-                    .decorate(TextDecoration.BOLD));
+            boss.customName(Component.text("[1페이즈] 강화된 보스 좀비")
+                    .color(NamedTextColor.DARK_RED).decorate(TextDecoration.BOLD));
             boss.setCustomNameVisible(true);
             boss.setAdult();
             boss.getEquipment().setHelmet(new ItemStack(Material.NETHERITE_HELMET));
