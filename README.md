@@ -9,17 +9,18 @@
 
 ### 💻 Backend & Core
 
-- **Language:** Java 21 (LTS)
+- **Language:** Java 21 (LTS) *(Maven release target)*
+- **Runtime:** Java 25 (LTS)
 - **Build Tool:** Maven
 - **Server Platform:** PaperMC 1.21.1
 - **IDE:** Visual Studio Code
 
 ### 📜 Scripting & Extension
 
-- **Engine:** Skript 2.9.3
+- **Engine:** Skript 2.15.2
 - **Addons:**
-  - **SkBee 3.6.1** — FastBoard, Metadata, NBT 및 고급 Skript 기능 확장
-  - **skript-reflect 2.6.2** — Bukkit/Paper API 연동 및 Java 클래스 접근
+  - **SkBee 3.23.0** — FastBoard, Metadata, NBT 및 고급 Skript 기능 확장
+  - **skript-reflect 2.6.3** — Bukkit/Paper API 연동 및 Java 클래스 접근
 
 ---
 
