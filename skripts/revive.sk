@@ -36,7 +36,6 @@ on damage:
                 kill victim
                 stop
 
-            # ★ [수정됨] is not set 대신 is not true 로 변경하여 철통 방어!
             if {reviving::%uuid of victim%} is not true:
                 send action bar "§c🩸 출혈 중... §f사망까지 §c%{downed::timer::%uuid of victim%}%초" to victim
             
@@ -140,6 +139,12 @@ on respawn:
 	remove jump boost from player
 	remove blindness from player
 
+# 로그아웃 시 상태 초기화
+on quit:
+	delete {downed::%uuid of player%}
+	delete {reviving::%uuid of player%}
+	delete {downed::timer::%uuid of player%}
+	delete {forcekill::%uuid of player%}
 
 # 4. 관리자용 강제 소생 명령어
 command /강제소생 [<player>]:
