@@ -64,8 +64,8 @@ public class BossListener implements Listener {
                     // 스킬 발동 및 보스바 변경
                     skillService.areaPush(boss.getLocation());
                     BossManager.updatePhase("§6§l[2페이즈] 분노한 보스 좀비", BarColor.YELLOW);
-                } else if (healthPercent <= 0.2 && !name.contains("[최종페이즈]")) {
-                    // 체력이 20% 이하로 떨어졌고, 아직 최종페이즈로 변신하지 않았다면
+                } else if (healthPercent <= 0.2 && name.contains("[2페이즈]")) {
+                    // 체력이 20% 이하로 떨어졌고, 현재 2페이즈 상태라면 최종페이즈로 전환
 
                     // 좀비 머리 위 이름표 변경
                     boss.customName(Component.text("[최종페이즈] 각성한 보스 좀비")
