@@ -22,12 +22,15 @@ public class JobSelectListener implements Listener {
 
         // 제목이 "[ 직업 선택 메뉴 ]"인지 확인
         if (plainTitle.equals("[ 직업 선택 메뉴 ]")) {
-            
+
             // 2. 플레이어가 아이템을 드래그해서 가져가는 것을 막음
             event.setCancelled(true);
 
             // 빈 공간을 클릭했으면 무시
-            if (event.getCurrentItem() == null) return;
+            if (event.getCurrentItem() == null
+                    || event.getCurrentItem().getType() == Material.AIR) {
+                return;
+            }
 
             Player player = (Player) event.getWhoClicked();
             Material clickedType = event.getCurrentItem().getType();
@@ -38,8 +41,8 @@ public class JobSelectListener implements Listener {
                 player.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
 
                 Component warriorMsg = Component.text("[System] ", NamedTextColor.RED)
-                            .append(Component.text("'전사' 직업을 선택하셨습니다!", NamedTextColor.WHITE));
-                    player.sendMessage(warriorMsg);
+                        .append(Component.text("'전사' 직업을 선택하셨습니다!", NamedTextColor.WHITE));
+                player.sendMessage(warriorMsg);
 
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 player.closeInventory();
@@ -50,9 +53,9 @@ public class JobSelectListener implements Listener {
                 player.getInventory().addItem(new ItemStack(Material.ARROW, 64)); // 화살 64개
 
                 Component archerMsg = Component.text("[System] ", NamedTextColor.GREEN)
-                            .append(Component.text("'궁수' 직업을 선택하셨습니다!", NamedTextColor.WHITE));
-                    player.sendMessage(archerMsg);
-                    
+                        .append(Component.text("'궁수' 직업을 선택하셨습니다!", NamedTextColor.WHITE));
+                player.sendMessage(archerMsg);
+
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 player.closeInventory();
             }
