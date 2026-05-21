@@ -12,8 +12,8 @@ public class Main extends JavaPlugin {
         // 서버가 켜질 때 실행되는 코드
         getLogger().info("------------------------------------");
         getLogger().info("MyFirstMCPlugin 활성화 완료!");
-        getLogger().info("첫 번째 마인크래프트 플러그인 제작에 성공했습니다.");
-        getLogger().info("채팅 이벤트 리스너가 성공적으로 등록되었습니다.");
+        getLogger().info("커스텀 게임 시스템이 성공적으로 로드되었습니다.");
+        getLogger().info("Commands / Listeners / Services 초기화 완료");
         getLogger().info("------------------------------------");
     }
 
