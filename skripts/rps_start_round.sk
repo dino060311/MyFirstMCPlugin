@@ -218,3 +218,17 @@ on death of player:
         
         # 화면에 승리/패배 띄우기
         send title "§6게임 종료!" with subtitle "§e%{_winner}%§f님의 승리!" to {_winner} and victim
+
+# --- 로그아웃 시 게임 강제 종료 ---
+on quit:
+    if {rps.active::%player%} is set:
+        set {_other} to {rps.active::%player%}
+
+        delete {rps.role::%player%}
+        delete {rps.role::%{_other}%}
+        delete {rps.active::%player%}
+        delete {rps.active::%{_other}%}
+        delete {rps.choice::%player%}
+        delete {rps.choice::%{_other}%}
+
+        send "{@p} §c상대가 게임을 종료해 대결이 취소되었습니다." to {_other}
