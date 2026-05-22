@@ -37,6 +37,12 @@ public class BombService {
             @Override
             public void run() {
 
+                // 폭탄 엔티티가 사라졌으면 종료
+                if (!thrownBomb.isValid()) {
+                    this.cancel();
+                    return;
+                }
+
                 if (count > 0) {
                     // 폭탄이 날아가는 동안 폭탄 위치에서 소리 재생
                     thrownBomb.getWorld().playSound(thrownBomb.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
