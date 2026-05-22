@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import io.github.dino060311.Main;
+import io.github.dino060311.manager.BossManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -37,6 +39,11 @@ public class BossSkillService {
 
         // 2초 뒤 폭발
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            
+            // 보스가 이미 죽었으면 스킬 취소
+            if (!BossManager.hasBoss()) {
+                return;
+            }
 
             bossLoc.getWorld().spawnParticle(Particle.EXPLOSION_EMITTER, bossLoc, 5);
             bossLoc.getWorld().playSound(bossLoc, Sound.ENTITY_GENERIC_EXPLODE, 2.0f, 0.8f);
@@ -77,6 +84,11 @@ public class BossSkillService {
 
         // 2초 후 번개 강림
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
+
+            // 보스가 이미 죽었으면 스킬 취소
+            if (!BossManager.hasBoss()) {
+                return;
+            }
             bossLoc.getWorld().getNearbyEntities(bossLoc, 10.0, 10.0, 10.0).forEach(entity -> {
 
                 if (entity instanceof Player p) {
