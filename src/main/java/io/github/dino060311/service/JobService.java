@@ -16,6 +16,8 @@ public class JobService {
 
     public Map<UUID, String> assignJobs() {
 
+        roleManager.clearRoles();
+
         List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
 
         // 1. 서버에서 미리 직업 배정표 작성 (섞기)
