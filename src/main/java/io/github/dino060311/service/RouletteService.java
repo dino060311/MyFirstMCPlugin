@@ -33,6 +33,12 @@ public class RouletteService {
 
             @Override
             public void run() {
+
+                if (!player.isOnline()) {
+                    this.cancel();
+                    return;
+                }
+
                 if (count >= 20) { // 20번 돌아가면 멈춤
                     stopRoulette(player, finalJob);
                     this.cancel();
@@ -83,6 +89,11 @@ public class RouletteService {
         new BukkitRunnable() {
             @Override
             public void run() {
+
+                if (!player.isOnline()) {
+                    return;
+                }
+                
                 player.closeInventory();
                 Component startMsg = Component.text("[System] ", NamedTextColor.GREEN)
                         .append(Component.text("게임이 곧 시작됩니다. 준비하세요!", NamedTextColor.WHITE));
