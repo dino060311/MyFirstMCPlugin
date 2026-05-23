@@ -74,10 +74,9 @@ public class RouletteService {
         player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
 
         if (job.equals("마피아")) {
-            player.getInventory().addItem(new ItemStack(Material.CROSSBOW));
-            player.getInventory().addItem(new ItemStack(Material.ARROW, 10)); // 화살 10개
+            player.getInventory().addItem(new ItemStack(Material.NETHERITE_SWORD)); // 네더라이트 검
         } else if (job.equals("경찰")) {
-            player.getInventory().addItem(new ItemStack(Material.IRON_SWORD)); // 철검
+            player.getInventory().addItem(new ItemStack(Material.COMPASS)); // 나침반
         } else if (job.equals("의사")) {
             player.getInventory().addItem(new ItemStack(Material.TOTEM_OF_UNDYING)); // 불사의 토템
         } else { // 시민
@@ -93,7 +92,7 @@ public class RouletteService {
                 if (!player.isOnline()) {
                     return;
                 }
-                
+
                 player.closeInventory();
                 Component startMsg = Component.text("[System] ", NamedTextColor.GREEN)
                         .append(Component.text("게임이 곧 시작됩니다. 준비하세요!", NamedTextColor.WHITE));

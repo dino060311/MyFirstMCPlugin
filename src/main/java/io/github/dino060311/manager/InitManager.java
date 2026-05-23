@@ -55,5 +55,6 @@ public class InitManager {
         // 직업 시스템 관련
         pm.registerEvents(new JobSelectListener(), plugin);
         pm.registerEvents(new JobMenuListener(), plugin);
+        pm.registerEvents(new RoleSkillListener(roleManager), plugin);
     }
 }
