@@ -1,0 +1,200 @@
+# [미니게임] 럭키 슬롯 머신
+
+options:
+	p: §f[§d럭키슬롯§f]
+	cost: 5
+	
+	# 테스트용 황금 코인 지급   
+command /황금코인 [<number>]:
+	permission: op
+	trigger:
+		set {_amount} to arg-1
+		
+		if {_amount} is not set:
+			set {_amount} to 10
+			
+		set {_coin} to sunflower named "§6§l[ 황금 코인 ]"
+		
+		give {_amount} of {_coin} to player
+		
+		send "§6[시스템] §e황금 코인 %{_amount}%개§f를 지급했습니다!" to player
+		
+		
+		# 슬롯머신 아이템 지급
+command /슬롯머신아이템:
+	permission: op
+	trigger:
+		give tripwire hook named "§d§l[ 럭키 슬롯 머신 ]" with lore "§7우클릭하여 슬롯머신 열기", "§e비용: 황금 코인 {@cost}개" to player
+		
+		send "{@p} §a슬롯머신 아이템을 지급했습니다!" to player
+		
+		
+		# 아이템 우클릭 → 슬롯 GUI 오픈
+on right click with tripwire hook:
+	if name of player's tool is "§d§l[ 럭키 슬롯 머신 ]":
+		cancel event
+		
+		if {slot::active::%uuid of player%} is true:
+			send "{@p} §c이미 슬롯머신 이용 중입니다!"
+			stop
+			
+		open chest inventory with 3 rows named "§d§l럭키 슬롯 머신" to player
+		
+		# GUI 배경
+		set {_slot} to 0
+		
+		loop 27 times:
+			if mod({_slot}, 2) is 0:
+				set slot {_slot} of player's current inventory to purple stained glass pane named " "
+			else:
+				set slot {_slot} of player's current inventory to magenta stained glass pane named " "
+				
+			add 1 to {_slot}
+			
+			# 슬롯 칸 (초기화)
+		set slot 11 of player's current inventory to white stained glass pane named " "
+		set slot 13 of player's current inventory to white stained glass pane named " "
+		set slot 15 of player's current inventory to white stained glass pane named " "
+		
+		# 레버 버튼
+		set slot 22 of player's current inventory to tripwire hook named "§a§l[ 슬롯머신 당기기 ]" with lore "§7클릭하여 슬롯을 돌립니다!", "§e비용: 황금 코인 {@cost}개"
+		
+		
+		# 슬롯머신 작동
+on inventory click:
+	if name of player's current inventory is "§d§l럭키 슬롯 머신":
+		cancel event
+		
+		# 레버만 클릭 가능
+		if index of event-slot is not 22:
+			stop
+			
+			# 중복 실행 방지
+		if {slot::active::%uuid of player%} is true:
+			send "{@p} §c이미 슬롯머신이 돌아가고 있습니다!"
+			stop
+			
+			# 코인 비용 검사
+		set {_coin} to sunflower named "§6§l[ 황금 코인 ]"
+		
+		if player does not have {@cost} of {_coin}:
+			send "{@p} §c황금 코인이 부족합니다! ({@cost}개 필요)"
+			play sound "entity.villager.no" to player
+			close player's inventory 
+			stop
+			
+			# 코인 차감
+		remove {@cost} of {_coin} from player
+		
+		set {slot::active::%uuid of player%} to true
+		
+		
+		# RNG 풀
+		set {_pool::*} to coal, coal, coal, coal, coal, coal, iron ingot, iron ingot, iron ingot, gold ingot, gold ingot, emerald
+		
+		
+		# 1단계 - 빠른 회전
+		loop 10 times:
+			play sound "block.note_block.hat" with pitch 2 to player
+			
+			set slot 11 of player's current inventory to (random element out of {_pool::*})
+			set slot 13 of player's current inventory to (random element out of {_pool::*})
+			set slot 15 of player's current inventory to (random element out of {_pool::*})
+			
+			wait 2 ticks
+			
+		play sound "block.piston.extend" with pitch 1.5 to player
+		
+		
+		# 2단계 - 감속
+		loop 8 times:
+			play sound "block.note_block.hat" with pitch 1.5 to player
+			
+			set slot 13 of player's current inventory to (random element out of {_pool::*})
+			set slot 15 of player's current inventory to (random element out of {_pool::*})
+			
+			wait 3 ticks
+			
+		play sound "block.piston.extend" with pitch 1.2 to player
+		
+		
+		# 3단계 - 최종 감속
+		loop 6 times:
+			play sound "block.note_block.hat" with pitch 1 to player
+			
+			set slot 15 of player's current inventory to (random element out of {_pool::*})
+			
+			wait 4 ticks
+			
+		play sound "block.anvil.land" with pitch 2 to player
+		wait 5 ticks
+		
+		
+		# 최종 결과
+		set {_r1} to type of slot 11 of player's current inventory
+		set {_r2} to type of slot 13 of player's current inventory
+		set {_r3} to type of slot 15 of player's current inventory
+		
+		# 1% 다이아 잭팟
+		set {_chance} to random integer between 1 and 100
+		
+		if {_chance} is 1:
+			set {_r1} to diamond
+			set {_r2} to diamond
+			set {_r3} to diamond
+			
+			set slot 11 of player's current inventory to diamond
+			set slot 13 of player's current inventory to diamond
+			set slot 15 of player's current inventory to diamond
+			
+			
+			# 당첨 판정 및 채팅 메시지 알림
+		if {_r1} is {_r2}:
+			if {_r2} is {_r3}:
+			
+				play sound "ui.toast.challenge_complete" with volume 2 to player
+				
+				# 다이아 
+				if {_r1} is diamond:
+					give 100 sunflower named "§6§l[ 황금 코인 ]" to player
+					send "{@p} §b다이아몬드 잭팟! §f엄청난 행운으로 §e황금 코인 100개§f가 지급되었습니다!" to player
+					broadcast "{@p} §b§l%player%§f님이 §b다이아몬드 잭팟§f을 터뜨렸습니다!!"
+					
+					# 에메랄드
+				else if {_r1} is emerald:
+					give 50 sunflower named "§6§l[ 황금 코인 ]" to player
+					send "{@p} §a에메랄드 당첨! §e황금 코인 50개§f가 지급되었습니다!" to player
+					
+					# 금괴
+				else if {_r1} is gold ingot:
+					give 30 sunflower named "§6§l[ 황금 코인 ]" to player
+					send "{@p} §6금괴 당첨! §e황금 코인 30개§f가 지급되었습니다!" to player
+					
+					# 철괴
+				else if {_r1} is iron ingot:
+					give 10 sunflower named "§6§l[ 황금 코인 ]" to player
+					send "{@p} §f철괴 당첨! §e황금 코인 10개§f가 지급되었습니다!" to player
+					
+					# 석탄
+				else if {_r1} is coal:
+					give 3 sunflower named "§6§l[ 황금 코인 ]" to player
+					send "{@p} §8석탄 당첨! §e황금 코인 3개§f가 지급되었습니다!" to player
+					
+				delete {slot::active::%uuid of player%}
+				stop
+				
+				
+				# 꽝
+		send "{@p} §7꽝입니다... 다시 도전하세요!"
+		play sound "entity.villager.no" to player
+		
+		delete {slot::active::%uuid of player%}
+		
+		
+		# 예외 처리
+on inventory close:
+	if name of player's current inventory is "§d§l럭키 슬롯 머신":
+		delete {slot::active::%uuid of player%}
+		
+on quit:
+	delete {slot::active::%uuid of player%}
