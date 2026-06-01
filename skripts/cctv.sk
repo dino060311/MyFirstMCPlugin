@@ -1,0 +1,93 @@
+# ==========================================
+# [상황극 연출] 실시간 CCTV 보안 시스템 (완성본)
+# ==========================================
+
+# 1. 카메라(CCTV) 위치 설정 명령어
+command /cctv설정:
+    permission: op
+    trigger:
+        # 플레이어가 서 있는 위치와 바라보는 시선(각도)을 그대로 저장합니다.
+        set {cctv::cam_location} to player's location
+        send "§c[CCTV] §f현재 위치와 시선이 §c[카메라 1]§f로 설정되었습니다!"
+        play sound "block.note_block.pling" to player
+
+# 2. 모니터(블록) 설정 명령어
+command /모니터설정:
+    permission: op
+    trigger:
+        set {_block} to target block of player
+        if {_block} is air:
+            send "§c[CCTV] 블록을 바라보고 명령어를 쳐주세요!"
+            stop
+        set {cctv::monitor_loc} to location of {_block}
+        send "§a[CCTV] §f바라보는 블록이 §a[CCTV 모니터]§f로 등록되었습니다!"
+        play sound "entity.experience_orb.pickup" to player
+
+# 3. 모니터 클릭 시 CCTV 화면 접속
+on right click:
+    # 클릭한 블록이 등록된 모니터인지 확인
+    if location of event-block is {cctv::monitor_loc}:
+        cancel event
+        
+        # 이미 CCTV를 보고 있는 상태면 무시
+        if {cctv::viewing::%uuid of player%} is true:
+            stop
+            
+        # ★ 상태 백업: 돌아올 원래 위치와 게임모드를 저장
+        set {cctv::origin_loc::%uuid of player%} to player's location
+        set {cctv::origin_gm::%uuid of player%} to player's gamemode
+        
+        set {cctv::viewing::%uuid of player%} to true
+        
+        # 관전자(Spectator) 모드로 변경 및 비행 속도 마비 (현지 님 아이디어 + 실무 팁!)
+        set player's gamemode to spectator
+        set player's flight speed to 0
+        teleport player to {cctv::cam_location}
+        
+        # 화면 연출 (REC 빨간불)
+        send title "§c§lREC 🔴" with subtitle "§7CCTV #1 연결됨 (웅크리기 눌러서 종료)" to player for 3 seconds
+        play sound "block.stone_button.click_on" with volume 1 and pitch 2 to player
+        
+        # 시청 중일 때 액션바 지속적으로 띄우기 (반복문)
+        while {cctv::viewing::%uuid of player%} is true:
+            if player is offline:
+                stop
+            send action bar "§c§l[REC 🔴] §f보안 카메라 시청 중... §7(Shift를 눌러 종료)" to player
+            wait 10 ticks
+
+# 4. CCTV 종료 (Shift / 웅크리기 버튼 누를 때)
+on sneak toggle:
+    if {cctv::viewing::%uuid of player%} is true:
+        
+        # 상태 해제
+        set {cctv::viewing::%uuid of player%} to false
+        
+        # 원래 위치와 게임모드, 그리고 기본 비행 속도로 완벽 복구
+        set player's flight speed to 0.1
+        teleport player to {cctv::origin_loc::%uuid of player%}
+        set player's gamemode to {cctv::origin_gm::%uuid of player%}
+        
+        # 저장했던 데이터 삭제 (메모리 정리)
+        delete {cctv::origin_loc::%uuid of player%}
+        delete {cctv::origin_gm::%uuid of player%}
+        
+        # 종료 연출
+        send title "§8§l[연결 종료]" with subtitle "§7모니터 화면에서 빠져나왔습니다." to player for 2 seconds
+        play sound "block.stone_button.click_off" to player
+
+# 5. 보안 철통 방어 (on player move 로직 최적화!)
+# 마우스(고개)를 돌리는 건 허용하되, 좌표를 0.1칸이라도 이탈하면 원래 카메라 위치로 강제 소환합니다.
+on player move:
+    if {cctv::viewing::%uuid of player%} is true:
+        if distance between player's location and {cctv::cam_location} > 0.1:
+            teleport player to {cctv::cam_location}
+
+# 6. 예외 처리: CCTV 보다가 서버 튕기거나 나갔을 때 꼬임 방지
+on quit:
+    if {cctv::viewing::%uuid of player%} is true:
+        set {cctv::viewing::%uuid of player%} to false
+        set player's flight speed to 0.1
+        teleport player to {cctv::origin_loc::%uuid of player%}
+        set player's gamemode to {cctv::origin_gm::%uuid of player%}
+        delete {cctv::origin_loc::%uuid of player%}
+        delete {cctv::origin_gm::%uuid of player%}
