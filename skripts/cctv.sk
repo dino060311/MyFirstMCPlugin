@@ -1,6 +1,4 @@
-# ==========================================
-# [상황극 연출] 실시간 CCTV 보안 시스템 (완성본)
-# ==========================================
+# 실시간 CCTV 보안 시스템
 
 # 1. 카메라(CCTV) 위치 설정 명령어
 command /cctv설정:
@@ -33,13 +31,13 @@ on right click:
         if {cctv::viewing::%uuid of player%} is true:
             stop
             
-        # ★ 상태 백업: 돌아올 원래 위치와 게임모드를 저장
+        # 상태 백업: 돌아올 원래 위치와 게임모드를 저장
         set {cctv::origin_loc::%uuid of player%} to player's location
         set {cctv::origin_gm::%uuid of player%} to player's gamemode
         
         set {cctv::viewing::%uuid of player%} to true
         
-        # 관전자(Spectator) 모드로 변경 및 비행 속도 마비 (현지 님 아이디어 + 실무 팁!)
+        # 관전자(Spectator) 모드로 변경 및 비행 속도 마비
         set player's gamemode to spectator
         set player's flight speed to 0
         teleport player to {cctv::cam_location}
@@ -48,7 +46,7 @@ on right click:
         send title "§c§lREC 🔴" with subtitle "§7CCTV #1 연결됨 (웅크리기 눌러서 종료)" to player for 3 seconds
         play sound "block.stone_button.click_on" with volume 1 and pitch 2 to player
         
-        # 시청 중일 때 액션바 지속적으로 띄우기 (반복문)
+        # 시청 중일 때 액션바 지속적으로 띄우기
         while {cctv::viewing::%uuid of player%} is true:
             if player is offline:
                 stop
@@ -75,14 +73,14 @@ on sneak toggle:
         send title "§8§l[연결 종료]" with subtitle "§7모니터 화면에서 빠져나왔습니다." to player for 2 seconds
         play sound "block.stone_button.click_off" to player
 
-# 5. 보안 철통 방어 (on player move 로직 최적화!)
-# 마우스(고개)를 돌리는 건 허용하되, 좌표를 0.1칸이라도 이탈하면 원래 카메라 위치로 강제 소환합니다.
+# 5. 보안 철통 방어
+# 마우스를 돌리는 건 허용하되, 좌표를 이탈하면 원래 카메라 위치로 강제 소환
 on player move:
     if {cctv::viewing::%uuid of player%} is true:
         if distance between player's location and {cctv::cam_location} > 0.1:
             teleport player to {cctv::cam_location}
 
-# 6. 예외 처리: CCTV 보다가 서버 튕기거나 나갔을 때 꼬임 방지
+# 6. 예외 처리
 on quit:
     if {cctv::viewing::%uuid of player%} is true:
         set {cctv::viewing::%uuid of player%} to false
